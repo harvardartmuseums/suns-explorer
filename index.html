@@ -32,6 +32,9 @@
             width = $(window).width() - margin.right - margin.left,
             height = $(window).height() - margin.top - margin.bottom;
 
+        var counter = 0;
+        var threshold = 25;
+
         // Create the SVG container and set the origin.
         var svg = d3.select("#suns").append("svg")
             .attr("width", width)
@@ -40,7 +43,12 @@
           .append("g")
             .attr("transform", "translate(0,0)");
 
-        window.setInterval(blastColors, 1000);
+        window.setInterval(doWork, 1000);
+
+        function doWork() {
+            blastColors();
+            eraseColors();
+        }
 
         function blastColors() {
             // Load some data
@@ -54,6 +62,7 @@
 
                     var dot = svg.append("g")
                            .attr("class", "dots")
+                           .attr("data-age", counter)
                         .selectAll(".dot")
                             .data(item.colors)
                         .enter().append("circle")
@@ -71,7 +80,18 @@
                     $("#title").append('<a target="_window" href="' + item.url + '">' + item.title + '</a>, ');
                 });
 
+                counter++;
             });
+        }
+
+        function eraseColors() {
+            var deadAge = counter - threshold;
+
+            d3.selectAll("g[data-age='" + deadAge + "']")
+                .transition()
+                    .style("opacity", "0")
+                    .duration(1000)
+                    .each("end", function() {this.remove();});
         }
         </script>
     </body>
