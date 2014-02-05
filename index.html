@@ -53,7 +53,7 @@
         function blastColors() {
             // Load some data
             // var apiURL = "http://api.harvardartmuseums.org/collection/object/231249";
-            var apiURL = "http://api.harvardartmuseums.org/collection/object?s=random&q=color:*&size=2";
+            var apiURL = "http://api.harvardartmuseums.org/collection/object?apikey=ac622520-8e83-11e3-bc70-7d9574e88e08&s=random&q=color:*&size=2";
             d3.json(apiURL, function(artwork) {
             
                 $.each(artwork.records, function(i, item) {
@@ -88,12 +88,6 @@
             var deadAge = counter - threshold;
 
             d3.selectAll("g[data-age='" + deadAge + "']")
-                .transition()
-                    .style("opacity", "0")
-                    .duration(1000)
-                    .each("end", function() {this.remove();});
-
-            d3.selectAll("span[data-age='" + deadAge + "']")
                 .transition()
                     .style("opacity", "0")
                     .duration(1000)
