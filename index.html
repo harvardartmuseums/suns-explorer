@@ -51,9 +51,7 @@
         }
 
         function blastColors() {
-            // Load some data
-            // var apiURL = "http://api.harvardartmuseums.org/collection/object/231249";
-            var apiURL = "http://api.harvardartmuseums.org/collection/object?apikey=ac622520-8e83-11e3-bc70-7d9574e88e08&s=random&q=color:*&size=2";
+            var apiURL = "http://api.harvardartmuseums.org/object?apikey=ac622520-8e83-11e3-bc70-7d9574e88e08&s=random&q=color:*&size=2";
             d3.json(apiURL, function(artwork) {
             
                 $.each(artwork.records, function(i, item) {
