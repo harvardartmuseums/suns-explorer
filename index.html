@@ -8,7 +8,9 @@
         <meta name="viewport" content="width=device-width">
         <style>
             html, body {margin: 0px;padding: 0px;overflow: hidden;font-family: verdana;}
-            svg {border: 0px solid;background: #ffffff;}
+            svg {border: 0px solid;}
+            .lights-on {background: #ffffff;}
+            .lights-off {background: #000000;}            
             a {color:#000000;text-decoration: none;}
             a:hover {color:#ffffff;background: #000000;}
 
@@ -45,38 +47,61 @@
 
         window.setInterval(doWork, 1000);
 
+        $(window).on('keydown', function (e) {
+            switch (e.keyCode) {
+                case 37: // left
+                    break;
+                case 38: //up
+                    $("#suns").removeClass("lights-on").addClass("lights-off");
+                    break;
+                case 39: // right
+                    break;
+                case 40: //down
+                    $("#suns").removeClass("lights-off").addClass("lights-on");
+                    break;
+                case 73: // i
+                    break;
+                default:
+                    //do nothing
+            }
+        });
+
         function doWork() {
             blastColors();
             eraseColors();
         }
 
         function blastColors() {
-            var apiURL = "http://api.harvardartmuseums.org/object?apikey=ac622520-8e83-11e3-bc70-7d9574e88e08&s=random&q=color:*&size=2";
+            var apiURL = "http://api.harvardartmuseums.org/object?apikey=ac622520-8e83-11e3-bc70-7d9574e88e08&s=random&color=any&size=1";
+
             d3.json(apiURL, function(artwork) {
-            
-                $.each(artwork.records, function(i, item) {
-                    var xPos = Math.floor(Math.random() * width);
-                    var yPos = Math.floor(Math.random() * height);
+                var g = svg.append("g")
+                        .attr("data-age", counter);
 
-                    var dot = svg.append("g")
-                           .attr("class", "dots")
-                           .attr("data-age", counter)
-                        .selectAll(".dot")
-                            .data(item.colors)
-                        .enter().append("circle")
-                            .attr("class", "dot")
-                            .style("fill", function(d) { return d.color; })
-                            .attr("cx", width/2)
-                            .attr("cy", height/2)
-                            .attr("r", function(d) { return d.percent*200; });
-                    
-                    dot.transition()
-                        .attr("cx", xPos)
-                        .attr("cy", yPos)
-                        .delay(400);
+                var a = g.selectAll(".dots")
+                        .data(artwork.records)
+                    .enter().append("g")
+                        .attr("class", "dots");
 
-                    $("#title").append('<span data-age="' + counter + '"><a target="_window" href="' + item.url + '">' + item.title + '</a>, </span>');
-                });
+                a.selectAll(".dot")
+                        .data(function(d) {return d.colors;})
+                    .enter().append("circle")
+                        .attr("class", "dot")
+                        .style("fill", function(d) { return d.color; })
+                        .attr("cx", width/2)
+                        .attr("cy", height/2)
+                        .attr("r", function(d) { return d.percent*200; });
+
+                a.append("text")
+                    .attr("dx", width/2)
+                    .attr("dy", height/2)
+                    .text(function(d) {return d.title; });  
+
+                a.transition()
+                    .attr("transform", "translate(" +  Math.floor(((Math.random() * 2) - 1) * width/2) + ", " + -Math.floor(((Math.random() * 2) - 1) * height/2) + ")")
+                    .delay(400);
+
+                a.on("click", showInfo)
 
                 counter++;
             });
@@ -90,6 +115,10 @@
                     .style("opacity", "0")
                     .duration(1000)
                     .each("end", function() {this.remove();});
+        }
+
+        function showInfo(d) {
+            console.log(d);
         }
         </script>
     </body>
