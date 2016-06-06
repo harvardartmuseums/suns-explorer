@@ -36,6 +36,7 @@
 
         var counter = 0;
         var threshold = 25;
+        var isPaused = false;
 
         // Create the SVG container and set the origin.
         var svg = d3.select("#suns").append("svg")
@@ -61,14 +62,19 @@
                     break;
                 case 73: // i
                     break;
+                case 80: // p
+                    isPaused = !isPaused;
+                    break;
                 default:
                     //do nothing
             }
         });
 
         function doWork() {
-            blastColors();
-            eraseColors();
+            if (!isPaused) {
+                blastColors();
+                eraseColors();
+            }
         }
 
         function blastColors() {
