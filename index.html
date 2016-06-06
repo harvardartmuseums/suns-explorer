@@ -70,6 +70,11 @@
             }
         });
 
+        $(window).on('resize', function() {
+            width = $(window).width() - margin.right - margin.left;
+            height = $(window).height() - margin.top - margin.bottom;
+        });
+
         function doWork() {
             if (!isPaused) {
                 blastColors();
