@@ -37,6 +37,7 @@
         var counter = 0;
         var threshold = 25;
         var isPaused = false;
+        var numPerBlast = 1;
 
         // Create the SVG container and set the origin.
         var svg = d3.select("#suns").append("svg")
@@ -64,6 +65,12 @@
                     break;
                 case 80: // p
                     isPaused = !isPaused;
+                    break;
+                case 107: // +
+                    numPerBlast++;
+                    break;
+                case 109: // -
+                    numPerBlast = (numPerBlast > 1) ? numPerBlast-1 : 1;
                     break;
                 default:
                     //do nothing
