@@ -25,7 +25,8 @@
             <div id="title"></div>
         </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script src="d3/d3.v3.min.js"></script>
+        <script src="js/d3/d3.v3.min.js"></script>
+        <script src="js/config.js"></script>
         <script type="text/javascript">
         //See https://github.com/mbostock/bost.ocks.org/blob/gh-pages/mike/nations/index.html
 
@@ -90,7 +91,7 @@
         }
 
         function blastColors() {
-            var apiURL = "http://api.harvardartmuseums.org/object?apikey=ac622520-8e83-11e3-bc70-7d9574e88e08&s=random&color=any&size=1";
+            var apiURL = HAM.config.apiBaseURL + "/object?apikey=" + HAM.config.apiKey + "&s=random&color=any&size=1";
 
             d3.json(apiURL, function(artwork) {
                 var g = svg.append("g")
