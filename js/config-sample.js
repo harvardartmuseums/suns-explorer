@@ -1,6 +1,6 @@
 var HAM = {
 	"config":  {
-		"apiBaseURL": "",
+		"apiBaseURL": "http://api.harvardartmuseums.org",
 		"apiKey": ""
 	}
 };
