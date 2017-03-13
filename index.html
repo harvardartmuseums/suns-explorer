@@ -14,12 +14,109 @@
             a {color:#000000;text-decoration: none;}
             a:hover {color:#ffffff;background: #000000;}
 
+            #controlPanel {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 25%;
+                height: 100%;
+                transform: translate(0, 0);
+                transition: transform 1s;
+			border-right: 1px solid #AAAAAA;
+			background-color: #FFFFFF;
+			z-index: 50;
+            }
+
+            #flexbox {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+			align-items: center;
+                justify-content: space-around;
+                width: 100%;
+                height: 100%;
+            }
+
+            #panelMinimizer {
+                position: absolute;
+                cursor: col-resize;
+			top: 0px;
+			right: 0px;
+			width: 3px;
+			height: 100%;
+			background-color: #AAAAAA;
+            }
+
+            #query {
+                box-sizing: border-box;
+                padding: .5vw 1vw;
+                position: relative;
+                width: 90%;
+                min-height: 10%;
+                border: 1px solid #AAAAAA;
+                flex-grow: 0;
+                flex-shrink: 0;
+                word-wrap: break-word;
+            }
+
+            #editablequery {
+                display: inline;
+                padding: 0 .25em 0 .25em;
+                background-color: #AAAAAA;
+                word-wrap: break-word;
+            }
+
+            #editablequery:focus {
+                outline: 1px solid #217AC0;
+            }
+
+            #query::before {
+                content: 'Query:';
+                position: absolute;
+                top: -17px;
+                left: 0px;
+            }
+
+            #json::before {
+                content: 'JSON:';
+                position: absolute;
+                top: -17px;
+            }
+
+            #json {
+                box-sizing: border-box;
+                position: relative;
+                width: 90%;
+                height: 50%;
+                border: 1px solid #AAAAAA;
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
+
+            #jsonContent {
+                box-sizing: border-box;
+                padding: 0px;
+                display: block;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                white-space: pre;
+                font-size: 65%;
+            }
+
             #suns {overflow: hidden;position: fixed}
             #info {position: fixed;padding:10px;}
             #info #title {top: 10px;left:25px;}
         </style>
     </head>
     <body>
+        <div id="controlPanel">
+            <div id="flexbox">
+                <div id="query">/object?s=random&amp;color=any&amp;size=1<div id="editablequery" contenteditable onblur="queryUpdate()"></div></div>
+                <div id="json"><span id="jsonContent"></span></div>
+            </div>
+            <div id="panelMinimizer" onClick="togglePanel()"></div>
+        </div>
         <div id="suns"></div>
         <div id="info">
             <div id="title"></div>
@@ -39,6 +136,10 @@
         var threshold = 25;
         var isPaused = false;
         var numPerBlast = 1;
+        var apiURL = HAM.config.apiBaseURL + "/object?apikey=" + HAM.config.apiKey + "&s=random&color=any&size=1";
+        var query = "";
+        var panelWidth = .25;
+        var defaultPanelWidth = .25;
 
         // Create the SVG container and set the origin.
         var svg = d3.select("#suns").append("svg")
@@ -49,6 +150,8 @@
             .attr("transform", "translate(0,0)");
 
         window.setInterval(doWork, 1000);
+
+        updateJSON();
 
         $(window).on('keydown', function (e) {
             switch (e.keyCode) {
@@ -91,9 +194,7 @@
         }
 
         function blastColors() {
-            var apiURL = HAM.config.apiBaseURL + "/object?apikey=" + HAM.config.apiKey + "&s=random&color=any&size=1";
-
-            d3.json(apiURL, function(artwork) {
+            d3.json(apiURL + query, function(artwork) {
                 var g = svg.append("g")
                         .attr("data-age", counter);
 
@@ -107,7 +208,7 @@
                     .enter().append("circle")
                         .attr("class", "dot")
                         .style("fill", function(d) { return d.color; })
-                        .attr("cx", width/2)
+                        .attr("cx", (width * (1 - panelWidth))/2 + panelWidth * width)
                         .attr("cy", height/2)
                         .attr("r", function(d) { return d.percent*200; });
 
@@ -117,7 +218,7 @@
                     .text(function(d) {return d.title; });  
 
                 a.transition()
-                    .attr("transform", "translate(" +  Math.floor(((Math.random() * 2) - 1) * width/2) + ", " + -Math.floor(((Math.random() * 2) - 1) * height/2) + ")")
+                    .attr("transform", "translate(" +  Math.floor(((Math.random() * 2) - 1) * (width * (1 - panelWidth))/2) + ", " + -Math.floor(((Math.random() * 2) - 1) * height/2) + ")")
                     .delay(400);
 
                 a.on("click", showInfo)
@@ -138,6 +239,103 @@
 
         function showInfo(d) {
             console.log(d);
+        }
+
+        function togglePanel() {
+            if (panelWidth == defaultPanelWidth) {
+                panelWidth = 0;
+                $("#controlPanel").css("transform", "translate(-" + (defaultPanelWidth*width - 3) + "px, 0)");
+            } else {
+                panelWidth = defaultPanelWidth;
+                $("#controlPanel").css("transform", "translate(0, 0)");
+            }
+        }
+
+        function prettify(string) {
+            var colorful = "";
+            var regex = /"#([0-9]|[a-z]){6}"/;
+            var index = 0;
+            var text = "";
+            while (string.length > 0) {
+                index = string.search(regex);
+                if (index != -1) {
+                    text = regex.exec(string)[0];
+                    colorful += string.slice(0, index);
+                    colorful += "<span style=\"color: " + text.slice(1, -1) + "\">";
+                    colorful += text + "</span>";
+                    string = string.slice(index + 9);
+                } else {
+                    colorful += string;
+                    string = "";
+                }
+            }
+
+            var bold = "";
+            regex = /"[^"]*":/;
+            while (colorful.length > 0) {
+                index = colorful.search(regex);
+                if (index != -1) {
+                    text = regex.exec(colorful)[0];
+                    bold += colorful.slice(0, index);
+                    bold += "<strong>" + text.slice(0, -1) + "</strong>";
+                    colorful = colorful.slice(index + (text.length - 1));
+                } else {
+                    bold += colorful;
+                    colorful = "";
+                }
+            }
+
+            var linked = "";
+            regex = /"http[^"]*"/;
+            while (bold.length > 0) {
+                index = bold.search(regex);
+                if (index != -1) {
+                    text = regex.exec(bold)[0];
+                    linked += bold.slice(0, index);
+                    linked += "\"<a href=" + text + " target=\"_blank\">" + text.slice(1, -1) + "</a>";
+                    bold = bold.slice(index + (text.length - 1));
+                } else {
+                    linked += bold;
+                    bold = "";
+                }
+            }
+
+            var email = "";
+            regex = /"[^"]*@[^"]*"/;
+            while (linked.length > 0) {
+                index = linked.search(regex);
+                if (index != -1) {
+                    text = regex.exec(linked)[0];
+                    email += linked.slice(0, index);
+                    email += "\"<a href=\"mailto:" + text.slice(1, -1) + "\" target=\"_top\">" + text.slice(1, -1) + "</a>";
+                    linked = linked.slice(index + (text.length - 1));
+                } else {
+                    email += linked;
+                    linked = "";
+                }
+            }
+
+            return email;
+        }
+
+        function updateJSON() {
+            var xmlrequest = new XMLHttpRequest();
+
+            xmlrequest.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        $("#jsonContent").html(prettify(JSON.stringify(JSON.parse(this.responseText), null, 2)));
+                    }
+                }
+            };
+
+            xmlrequest.open("GET", apiURL + query, true);
+            xmlrequest.send();
+        }
+
+        function queryUpdate() {
+            query = $("#editablequery").html();
+            updateJSON();
         }
         </script>
     </body>
