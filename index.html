@@ -77,6 +77,14 @@
                 left: 0px;
             }
 
+            #query::after {
+                content: 'try &title=tragedy';
+                position: absolute;
+                bottom: -15px;
+                right: 0px;
+                font-size: 75%;
+            }
+
             #json::before {
                 content: 'JSON:';
                 position: absolute;
@@ -91,6 +99,14 @@
                 border: 1px solid #AAAAAA;
                 flex-grow: 0;
                 flex-shrink: 0;
+            }
+
+            #json::after {
+                content: 'an example JSON response for the query above';
+                position: absolute;
+                bottom: -15px;
+                right: 0px;
+                font-size: 75%;
             }
 
             #jsonContent {
@@ -112,7 +128,7 @@
     <body>
         <div id="controlPanel">
             <div id="flexbox">
-                <div id="query">/object?s=random&amp;color=any&amp;size=1<div id="editablequery" contenteditable onblur="queryUpdate()"></div></div>
+                <div id="query">/object?s=random&amp;color=any&amp;size=1<div id="editablequery" contenteditable onblur="queryUpdate()" onkeydown="handleEnter(event)"></div></div>
                 <div id="json"><span id="jsonContent"></span></div>
             </div>
             <div id="panelMinimizer" onClick="togglePanel()"></div>
@@ -194,7 +210,7 @@
         }
 
         function blastColors() {
-            d3.json(apiURL + query, function(artwork) {
+            d3.json((apiURL + query), function(artwork) {
                 var g = svg.append("g")
                         .attr("data-age", counter);
 
@@ -334,8 +350,14 @@
         }
 
         function queryUpdate() {
-            query = $("#editablequery").html();
+            query = $("#editablequery").html().replace("&amp;", "&");
             updateJSON();
+        }
+
+        function handleEnter(e) {
+            if (e.which == "13") {
+                $("#editablequery").blur();
+            }
         }
         </script>
     </body>
