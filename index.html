@@ -81,6 +81,9 @@
         $(window).on('resize', function() {
             width = $(window).width() - margin.right - margin.left;
             height = $(window).height() - margin.top - margin.bottom;
+
+            svg.attr("width", width)
+                .attr("height", height);
         });
 
         function doWork() {
