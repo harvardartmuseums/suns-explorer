@@ -133,7 +133,7 @@
                 .transition()
                     .style("opacity", "0")
                     .duration(1000)
-                    .each("end", function() {this.remove();});
+                    .each("end", function() {d3.select(this).remove();});
         }
 
         function showInfo(d) {
