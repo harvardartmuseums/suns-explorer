@@ -1,0 +1,34 @@
+<div id="status"></div>
+<div id="list"></div>
+
+<script type="text/javascript">
+
+    var socket = io('/user-namespace');
+
+    socket.on("screens up", function(data) {
+    	setScreenStatus(data);
+    });
+
+    socket.on("new sun", function(data) {
+    	updateList(data);
+    });
+
+    function updateList(object) {
+    	var item = $("<div/>")
+    		.click(object, activateItem)
+    		.addClass("item")
+    		.text(object.title);
+
+    	$("#list").append(item);
+    }
+
+    function setScreenStatus(status) {
+    	$("#status").text(status ? "Screens are on" : "Screen are off");
+    }
+
+    function activateItem(e) {
+    	socket.emit("object clicked", e.data.objectid);
+    	// window.open(e.data.url);
+    }
+
+</script>

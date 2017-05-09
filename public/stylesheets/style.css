@@ -1,0 +1,17 @@
+html, body {margin: 0px;padding: 0px;font-family: verdana;}
+svg {border: 0px solid;}
+
+.lights-on {background: #ffffff;}
+.lights-off {background: #000000;}            
+
+a {color:#000000;text-decoration: none;}
+a:hover {color:#ffffff;background: #000000;}
+
+#suns {overflow: hidden;position: fixed}
+#info {position: fixed;padding:10px;}
+#info #title {top: 10px;left:25px;}
+
+#list .item {padding: 10px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+#list .item:hover {background-color: #c8c8c8; cursor: pointer;}
+
+#status {padding: 10px;background-color: #c8c8c8;}

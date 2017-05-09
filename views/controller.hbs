@@ -1,0 +1,39 @@
+<div id="status"></div>
+<div id="controller">
+	<button id="pause">Pause</button>
+	<button id="scatter">Scatter</button>
+	<button id="multiplier-1">1</button>
+	<button id="multiplier-2">2</button>
+	<button id="multiplier-3">3</button>
+</div>
+
+<script type="text/javascript">
+
+    var socket = io('/controller-namespace');
+
+    socket.on("screens up", function(data) {
+    	setScreenStatus(data);
+    });
+
+	$("#pause").click(function() {
+		socket.emit("pause clicked")
+	});
+
+	$("#scatter").click(function() {
+		socket.emit("scatter clicked")
+	});
+
+	$("#multiplier-1").click(function() {
+		socket.emit("multiplier clicked", 1);
+	});
+	$("#multiplier-2").click(function() {
+		socket.emit("multiplier clicked", 2);
+	});
+	$("#multiplier-3").click(function() {
+		socket.emit("multiplier clicked", 3);
+	});
+
+    function setScreenStatus(status) {
+    	$("#status").text(status ? "Screens are on" : "Screen are off");
+    }
+</script>
