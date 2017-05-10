@@ -101,7 +101,11 @@ controllerSockets.on("connection", function(socket) {
   socket.on("pause clicked", function() {
     screensSockets.emit("pause clicked");
   });
-  
+
+  socket.on("lights clicked", function() {
+    screensSockets.emit("lights clicked");
+  });
+
   socket.on("scatter clicked", function() {
     screensSockets.emit("scatter clicked");
   });

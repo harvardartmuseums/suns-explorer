@@ -29,6 +29,7 @@
     var isPaused = false;
     var multiplier = 1;
     var ringScaleFactor = 100;
+    var lightsOn = true;
 
     // Create the SVG container and set the origin.
     var svg = d3.select("#suns").append("svg")
@@ -45,12 +46,11 @@
             case 37: // left
                 break;
             case 38: //up
-                $("#suns").removeClass("lights-on").addClass("lights-off");
+                setLights();
                 break;
             case 39: // right
                 break;
             case 40: //down
-                $("#suns").removeClass("lights-off").addClass("lights-on");
                 break;
             case 73: // i
                 break;
@@ -137,6 +137,16 @@
                 .each("end", function() {d3.select(this).remove();});
     }
 
+    function setLights() {
+        lightsOn = !lightsOn;
+
+        if (lightsOn) {
+            $("#suns").removeClass("lights-off").addClass("lights-on");
+        } else {
+            $("#suns").removeClass("lights-on").addClass("lights-off");  
+        }
+    }
+
     socket.on("object clicked", function(objectid) {
         var s = d3.selectAll(".dots")
             .filter(function(d) {return d.objectid === objectid})
@@ -148,6 +158,10 @@
 
     socket.on("pause clicked", function() {
         isPaused = !isPaused;
+    });
+
+    socket.on("lights clicked", function() {
+        setLights();
     });
 
     socket.on("scatter clicked", function() {

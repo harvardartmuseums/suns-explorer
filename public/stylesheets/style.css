@@ -14,4 +14,3 @@ a:hover {color:#ffffff;background: #000000;}
 #list .item {padding: 10px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 #list .item:hover {background-color: #c8c8c8; cursor: pointer;}
 
-#status {padding: 10px;background-color: #c8c8c8;}
