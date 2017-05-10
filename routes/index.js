@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var siteTitle = "Suns | Harvard Art Museums";
+var siteTitle = "Suns Explorer | Harvard Art Museums";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
