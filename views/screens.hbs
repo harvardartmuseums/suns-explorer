@@ -199,8 +199,14 @@
             .each("end", function() {d3.select(".sun").remove();});
 
         setTimeout(function() {
-            isPaused = false;
-            setLights();                
+            lightsOn = true;
+
+            d3.selectAll("#suns")  
+                .transition()
+                .ease("exp-in")
+                .style("background", "#ffffff")
+                .duration(750)
+                .each("end", function() {isPaused = false});
         }, 5000);
     });
 
