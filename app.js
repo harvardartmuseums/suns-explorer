@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var io = require('socket.io')();
 
-
+var data  = require('./routes/data');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -28,6 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.use('/data', data);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
@@ -108,6 +109,10 @@ controllerSockets.on("connection", function(socket) {
 
   socket.on("scatter clicked", function() {
     screensSockets.emit("scatter clicked");
+  });
+
+  socket.on("end-times clicked", function() {
+    screensSockets.emit("end-times clicked");
   });
 
   socket.on("multiplier clicked", function(multiplier) {

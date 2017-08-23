@@ -9,6 +9,7 @@
 		<button id="pause" class="btn btn-secondary btn-lg btn-block">Pause</button>
 		<button id="lights" class="btn btn-secondary btn-lg btn-block">Lights</button>
 		<button id="scatter" class="btn btn-secondary btn-lg btn-block">Scatter</button>
+		<button id="end-times" class="btn btn-secondary btn-lg btn-block">End Times</button>
 	</div>
 	<div class="mt-3">
 		<h3>Resize Suns</h3>
@@ -40,6 +41,18 @@
 
 	$("#scatter").click(function() {
 		socket.emit("scatter clicked")
+	});
+
+	$("#big-bang").click(function() {
+		socket.emit("big-bang clicked")
+	});
+
+	$("#eclipse").click(function() {
+		socket.emit("eclipse clicked")
+	});
+
+	$("#end-times").click(function() {
+		socket.emit("end-times clicked")
 	});
 
 	$("#multiplier-1").click(function() {

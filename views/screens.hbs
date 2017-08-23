@@ -1,6 +1,5 @@
 <div id="suns"></div>
 <script src="javascripts/d3/d3.v3.min.js"></script>
-<script src="javascripts/config.js"></script>
 <script type="text/javascript">
 
     d3.selection.prototype.moveToFront = function() {  
@@ -12,12 +11,11 @@
     var socket = io('/screens-namespace');
 
     var apiParameters = {
-        apikey: HAM.config.apiKey,
         sort: "random",
         color: "any",
         size: 1
     };
-    var apiQuery = HAM.config.apiBaseURL + "/object?" + $.param(apiParameters);
+    var apiQuery = "/data/object?" + $.param(apiParameters);
 
     // Chart dimensions.
     var margin = {top: 0, right: 0, bottom: 0, left: 0},
@@ -127,6 +125,12 @@
         return "translate(" + x + ", " + y + ")";
     }
 
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    }
+
     function eraseColors() {
         var deadAge = counter - threshold;
 
@@ -141,9 +145,9 @@
         lightsOn = !lightsOn;
 
         if (lightsOn) {
-            $("#suns").removeClass("lights-off").addClass("lights-on");
+            d3.selectAll("#suns").style("background", "#ffffff");
         } else {
-            $("#suns").removeClass("lights-on").addClass("lights-off");  
+            d3.selectAll("#suns").style("background", "#000000");  
         }
     }
 
@@ -169,6 +173,35 @@
             .transition()
             .attr("transform", generateRandomTranslation)
             .duration(1500);
+    });
+
+    socket.on("end-times clicked", function() {
+        isPaused = true;
+        lightsOn = false;
+
+        d3.selectAll("#suns")  
+            .transition()
+            .ease("exp-in")
+            .style("background", "#000000")
+            .duration(750);
+
+        d3.selectAll("text")  
+            .transition()
+            .ease("exp-in")
+            .style("opacity", 0.000001)
+            .duration(750);
+
+        d3.selectAll(".dot")  
+            .transition()
+            .ease("exp-in")
+            .attr("r", 0)
+            .duration(750)
+            .each("end", function() {d3.select(".sun").remove();});
+
+        setTimeout(function() {
+            isPaused = false;
+            setLights();                
+        }, 5000);
     });
 
     socket.on("set multiplier", function(value) {
