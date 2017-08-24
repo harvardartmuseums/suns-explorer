@@ -65,27 +65,33 @@ var screensSockets = io.of("/screens-namespace");
 var controllerSockets = io.of("/controller-namespace");
 var userSockets = io.of("/user-namespace");
 
-var controllerCount = 0;
-var screensUp = false; 
+var sunsConfig = {
+  controllerCount: 0,
+  screensUp: false,
+  scaleMultiplier: 1
+};
 
 // Track activity on the Lightbox screens
 screensSockets.on('connection', function(socket) {
-  screensUp = true;
-  userSockets.emit("screens up", screensUp);
+  sunsConfig.screensUp = true;
+ 
+  socket.emit("start up", sunsConfig);
+
+  userSockets.emit("screens up", sunsConfig.screensUp);
 
   socket.on("new sun", function(data) {
     userSockets.emit("new sun", data);
   });
 
   socket.on("disconnect", function(data) {
-    screensUp = false;
-    userSockets.emit("screens up", screensUp);
+    sunsConfig.screensUp = false;
+    userSockets.emit("screens up", sunsConfig.screensUp);
   });
 });
 
 // Track activity of general users
 userSockets.on("connection", function(socket) {
-  socket.emit("screens up", screensUp);
+  socket.emit("screens up", sunsConfig.screensUp);
 
   socket.on("object clicked", function(objectid) {
     screensSockets.emit("object clicked", objectid);
@@ -94,8 +100,9 @@ userSockets.on("connection", function(socket) {
 
 // Track activity of the Lightbox screens controller
 controllerSockets.on("connection", function(socket) {
-  controllerCount =+1;
-  controllerSockets.emit("screens up", screensUp);
+  sunsConfig.controllerCount +=1;
+
+  controllerSockets.emit("screens up", sunsConfig.screensUp);
 
   socket.on("pause clicked", function() {
     screensSockets.emit("pause clicked");
@@ -118,7 +125,12 @@ controllerSockets.on("connection", function(socket) {
   });
 
   socket.on("multiplier clicked", function(multiplier) {
-    screensSockets.emit("set multiplier", multiplier);
+    sunsConfig.scaleMultiplier = multiplier;
+    screensSockets.emit("set multiplier", sunsConfig.scaleMultiplier);
+  });
+
+  socket.on("disconnect", function() {
+    sunsConfig.controllerCount -=1;
   });
 });
 

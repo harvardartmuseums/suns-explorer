@@ -131,6 +131,13 @@
         return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
 
+    function scaleSuns() {
+        d3.selectAll(".dot")
+            .transition()
+            .attr("r", calculateRadius)
+            .delay(200);
+    }
+
     function eraseColors() {
         var deadAge = counter - threshold;
 
@@ -150,6 +157,11 @@
             d3.select("#suns").style("background", "#000000");  
         }
     }
+
+    socket.on("start up", function(data) {
+        multiplier = data.scaleMultiplier;
+        scaleSuns();
+    });
 
     socket.on("object clicked", function(objectid) {
         var s = d3.selectAll(".dots")
@@ -257,10 +269,6 @@
 
     socket.on("set multiplier", function(value) {
         multiplier = value;
-
-        d3.selectAll(".dot")
-            .transition()
-            .attr("r", calculateRadius)
-            .delay(200);
+        scaleSuns();
     })
 </script>
