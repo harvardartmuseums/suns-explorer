@@ -115,6 +115,10 @@ controllerSockets.on("connection", function(socket) {
     screensSockets.emit("end-times clicked");
   });
 
+  socket.on("big-bang clicked", function() {
+    screensSockets.emit("big-bang clicked");
+  });
+
   socket.on("multiplier clicked", function(multiplier) {
     screensSockets.emit("set multiplier", multiplier);
   });

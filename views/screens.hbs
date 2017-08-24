@@ -213,6 +213,22 @@
         }, 5000);
     });
 
+    socket.on("big-bang clicked", function() {
+        //bang on
+        isPaused = true;
+        d3.selectAll(".dots")  
+            .transition()
+                .ease("exp-in")
+                .attr("transform", "translate(0,0)")
+                .duration(1500)
+            .transition()
+                .delay(5000)    
+                .ease("exp-out")
+                .attr("transform", generateRandomTranslation)
+                .duration(500)
+                .each("end", function() {isPaused = false});
+    });
+
     socket.on("set multiplier", function(value) {
         multiplier = value;
 
