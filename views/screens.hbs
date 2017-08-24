@@ -241,6 +241,18 @@
                 .ease("exp-out")
                 .attr("r", calculateRadius)
                 .duration(500);
+
+        d3.select("#suns")  
+            .transition()
+                .ease("exp-in")
+                .style("background", "#000000")
+                .duration(1500)
+            .transition()
+                .delay(5000)
+                .ease("exp-out")
+                .style("background", "#ffffff")
+                .duration(500)
+                .each("end", function() {lightsOn = true});             
     });
 
     socket.on("set multiplier", function(value) {
