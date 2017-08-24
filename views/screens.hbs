@@ -236,6 +236,8 @@
         //bang on
         isPaused = true;
 
+        socket.emit("big-bang started");
+
         d3.selectAll(".dots")
             .transition();
 
@@ -273,8 +275,13 @@
                 .delay(5000)
                 .ease("exp-out")
                 .style("background", "#ffffff")
-                .duration(500)
-                .each("end", function() {lightsOn = true});             
+                .duration(500);       
+
+        setTimeout(function() {
+            lightsOn = true;
+
+            socket.emit("big-bang ended");
+        }, 7500);                      
     });
 
     socket.on("set multiplier", function(value) {

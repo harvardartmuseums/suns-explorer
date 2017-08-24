@@ -27,12 +27,16 @@
 <div id="end-times-message" class="controller-overlay-wrapper">
 	<div class="controller-overlay-wrapper-inner">
 		<div class="controller-message-container">
-			<h1>So long, and thanks for all the fish.</h1>
+			<h1 id="overlay-message">So long, and thanks for all the fish.</h1>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
+	var messages = [
+		"So long, and thanks for all the fish.",
+		"“By looking far out into space we are also looking far back into time, back toward the horizon of the universe, back toward the epoch of the Big Bang.”  ―Carl Sagan, Cosmos"
+	];
 
     var socket = io('/controller-namespace');
 
@@ -41,12 +45,27 @@
     });
 
     socket.on("end-times started", function(data) {
+		$("#overlay-message").text(messages[0]);
+
     	$("#end-times-message")
 			.css("display", "table")
 			.fadeTo(750, 1.0);
     });
 
     socket.on("end-times ended", function(data) {
+    	$("#end-times-message")
+			.fadeTo(750, 0.0, function() {$(this).hide()})
+    });
+
+    socket.on("big-bang started", function(data) {
+		$("#overlay-message").text(messages[1]);
+
+    	$("#end-times-message")
+			.css("display", "table")
+			.fadeTo(750, 1.0);
+    });
+
+    socket.on("big-bang ended", function(data) {
     	$("#end-times-message")
 			.fadeTo(750, 0.0, function() {$(this).hide()})
     });

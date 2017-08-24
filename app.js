@@ -92,6 +92,14 @@ screensSockets.on('connection', function(socket) {
     controllerSockets.emit("end-times ended", data);
   });
 
+  socket.on("big-bang started", function(data) {
+    controllerSockets.emit("big-bang started", data);
+  });
+  
+  socket.on("big-bang ended", function(data) {
+    controllerSockets.emit("big-bang ended", data);
+  });
+
   socket.on("disconnect", function(data) {
     sunsConfig.screensUp = false;
     userSockets.emit("screens up", sunsConfig.screensUp);
