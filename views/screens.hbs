@@ -193,6 +193,9 @@
 
         socket.emit("end-times started");
 
+        d3.selectAll(".dots")
+            .transition();
+
         d3.select("#suns")  
             .transition()
             .ease("exp-in")
@@ -232,6 +235,9 @@
     socket.on("big-bang clicked", function() {
         //bang on
         isPaused = true;
+
+        d3.selectAll(".dots")
+            .transition();
 
         //move all the suns to the center of the screen; pause a moment; the scatter them in random directions
         d3.selectAll(".dots")  
