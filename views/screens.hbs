@@ -145,9 +145,9 @@
         lightsOn = !lightsOn;
 
         if (lightsOn) {
-            d3.selectAll("#suns").style("background", "#ffffff");
+            d3.select("#suns").style("background", "#ffffff");
         } else {
-            d3.selectAll("#suns").style("background", "#000000");  
+            d3.select("#suns").style("background", "#000000");  
         }
     }
 
@@ -179,7 +179,7 @@
         isPaused = true;
         lightsOn = false;
 
-        d3.selectAll("#suns")  
+        d3.select("#suns")  
             .transition()
             .ease("exp-in")
             .style("background", "#000000")
@@ -201,7 +201,7 @@
         setTimeout(function() {
             lightsOn = true;
 
-            d3.selectAll("#suns")  
+            d3.select("#suns")  
                 .transition()
                 .ease("exp-in")
                 .style("background", "#ffffff")
