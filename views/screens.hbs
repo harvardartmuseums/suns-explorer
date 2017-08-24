@@ -216,6 +216,8 @@
     socket.on("big-bang clicked", function() {
         //bang on
         isPaused = true;
+
+        //move all the suns to the center of the screen; pause a moment; the scatter them in random directions
         d3.selectAll(".dots")  
             .transition()
                 .ease("exp-in")
@@ -227,6 +229,18 @@
                 .attr("transform", generateRandomTranslation)
                 .duration(500)
                 .each("end", function() {isPaused = false});
+
+        //scale the suns down to nothing; pause a moment; restore them to their actual size
+        d3.selectAll(".dot")
+            .transition()
+                .ease("exp-in")
+                .attr("r", 0)
+                .duration(1500)
+            .transition()
+                .delay(5000)
+                .ease("exp-out")
+                .attr("r", calculateRadius)
+                .duration(500);
     });
 
     socket.on("set multiplier", function(value) {
