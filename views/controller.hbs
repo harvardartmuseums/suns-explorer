@@ -32,6 +32,14 @@
     	setScreenStatus(data);
     });
 
+    socket.on("end-times started", function(data) {
+    	
+    });
+
+    socket.on("end-times ended", function(data) {
+    	
+    });
+
 	$("#pause").click(function() {
 		socket.emit("pause clicked")
 	});

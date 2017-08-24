@@ -191,6 +191,8 @@
         isPaused = true;
         lightsOn = false;
 
+        socket.emit("end-times started");
+
         d3.select("#suns")  
             .transition()
             .ease("exp-in")
@@ -222,6 +224,8 @@
                 .style("background", "#ffffff")
                 .duration(750)
                 .each("end", function() {isPaused = false});
+
+            socket.emit("end-times ended");
         }, 5000);
     });
 

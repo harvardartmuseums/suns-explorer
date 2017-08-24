@@ -78,14 +78,24 @@ screensSockets.on('connection', function(socket) {
   socket.emit("start up", sunsConfig);
 
   userSockets.emit("screens up", sunsConfig.screensUp);
+  controllerSockets.emit("screens up", sunsConfig.screensUp);
 
   socket.on("new sun", function(data) {
     userSockets.emit("new sun", data);
   });
 
+  socket.on("end-times started", function(data) {
+    controllerSockets.emit("end-times started", data);
+  });
+  
+  socket.on("end-times ended", function(data) {
+    controllerSockets.emit("end-times ended", data);
+  });
+
   socket.on("disconnect", function(data) {
     sunsConfig.screensUp = false;
     userSockets.emit("screens up", sunsConfig.screensUp);
+    controllerSockets.emit("screens up", sunsConfig.screensUp);
   });
 });
 
