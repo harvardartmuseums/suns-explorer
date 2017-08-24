@@ -8,7 +8,6 @@ var io = require('socket.io')();
 
 var data  = require('./routes/data');
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -29,7 +28,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/data', data);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
