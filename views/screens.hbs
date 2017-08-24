@@ -183,7 +183,7 @@
             .transition()
             .ease("exp-in")
             .style("background", "#000000")
-            .duration(750);
+            .duration(1000);
 
         d3.selectAll("text")  
             .transition()
@@ -193,13 +193,16 @@
 
         d3.selectAll(".dot")  
             .transition()
+            .delay(function() {return getRandomInt(0, 500)})
             .ease("exp-in")
             .attr("r", 0)
-            .duration(750)
-            .each("end", function() {d3.select(".sun").remove();});
+            .duration(750);
 
         setTimeout(function() {
             lightsOn = true;
+
+            d3.selectAll(".sun")
+                .remove();
 
             d3.select("#suns")  
                 .transition()
