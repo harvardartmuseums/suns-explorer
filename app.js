@@ -62,6 +62,7 @@ app.use(function(err, req, res, next) {
 
 
 var screensSockets = io.of("/screens-namespace");
+var shadesSockets = io.of("/shades-namespace");
 var controllerSockets = io.of("/controller-namespace");
 var userSockets = io.of("/user-namespace");
 
@@ -82,6 +83,7 @@ screensSockets.on('connection', function(socket) {
 
   socket.on("new sun", function(data) {
     userSockets.emit("new sun", data);
+    shadesSockets.emit("new sun", data);
   });
 
   socket.on("end-times started", function(data) {

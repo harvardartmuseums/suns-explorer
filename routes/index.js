@@ -13,6 +13,11 @@ router.get('/screens', function(req, res, next) {
   res.render('screens', { title: siteTitle });
 });
 
+/* GET Lighbbox shades page. */
+router.get('/shades', function(req, res, next) {
+  res.render('shades', { title: siteTitle });
+});
+
 /* GET list view page. */
 router.get('/list', function(req, res, next) {
   res.render('list', { title: siteTitle });

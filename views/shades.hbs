@@ -1,0 +1,69 @@
+<div id="suns"></div>
+<script src="javascripts/d3/d3.v3.min.js"></script>
+<script type="text/javascript">
+
+    d3.selection.prototype.moveToFront = function() {  
+        return this.each(function(){
+            this.parentNode.appendChild(this);
+        });
+    };
+
+    var socket = io('/shades-namespace');
+
+    // Chart dimensions.
+    var margin = {top: 0, right: 0, bottom: 0, left: 0},
+        width = $(window).width() - margin.right - margin.left,
+        height = $(window).height() - margin.top - margin.bottom;    
+
+    var multiplier = 5;
+    var ringScaleFactor = 100;
+
+    // Create the SVG container and set the origin.
+    var svg = d3.select("#suns").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var sunsCanvas = svg.append("g")
+        .attr("transform", "translate(0,0)");        
+
+    $(window).on('resize', function() {
+        width = $(window).width() - margin.right - margin.left;
+        height = $(window).height() - margin.top - margin.bottom;
+
+        svg.attr("width", width)
+            .attr("height", height);
+    });        
+
+
+    function calculateRadius(d) {
+        return d.percent*(multiplier*ringScaleFactor);
+    }
+
+    function renderSun(data) {
+        var suns = [data];
+
+        d3.select(".sun").remove();
+
+        var g = sunsCanvas.append("g")
+            .attr("class", "sun");
+
+        var a = g.selectAll(".dots")
+                .data(suns)
+            .enter().append("g")
+                .attr("class", "dots");
+
+        a.selectAll(".dot")
+                .data(function(d) {return d.colors;})
+            .enter().append("circle")
+                .attr("class", "dot")
+                .style("fill", function(d) { return d.color; })
+                .attr("cx", width/2)
+                .attr("cy", height/2)
+                .attr("r", calculateRadius);
+    }
+
+    socket.on("new sun", function(data) {
+    	renderSun(data);
+    });
+
+</script>
