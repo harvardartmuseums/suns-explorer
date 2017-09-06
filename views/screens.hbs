@@ -13,6 +13,7 @@
     var apiParameters = {
         sort: "random",
         color: "any",
+        fields: "objectid,title,url,colors,gallery",
         size: 1
     };
     var apiQuery = "/data/object?" + $.param(apiParameters);
@@ -99,6 +100,13 @@
                 .attr("dx", width/2)
                 .attr("dy", height/2)
                 .text(function(d) {return d.title; });  
+
+            if (artwork.records[0].gallery) {
+                a.append("text")
+                    .attr("dx", width/2)
+                    .attr("dy", height/2 + 20)
+                    .text(function(d) {return "Visit me in gallery " + d.gallery.gallerynumber + " on floor " + d.gallery.floor; });  
+            }
 
             a.transition()
                 .attr("transform", generateRandomTranslation)
