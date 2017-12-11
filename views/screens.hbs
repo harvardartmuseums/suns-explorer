@@ -10,13 +10,17 @@
 
     var socket = io('/screens-namespace');
 
+    var queryToggle = 0;
+    var queries = [];
     var apiParameters = {
         sort: "random",
         color: "any",
+        classification: "Paintings",
         fields: "objectid,title,url,colors,gallery",
         size: 1
     };
-    var apiQuery = "/data/object?" + $.param(apiParameters);
+    queries.push("/data/object?" + $.param(apiParameters));
+    queries.push("/data/rijks");
 
     // Chart dimensions.
     var margin = {top: 0, right: 0, bottom: 0, left: 0},
@@ -26,6 +30,7 @@
     var counter = 0;
     var threshold = 50;
     var isPaused = false;
+    var isLabelsOn = false;
     var multiplier = 1;
     var ringScaleFactor = 100;
     var lightsOn = true;
@@ -77,10 +82,23 @@
     }
 
     function blastColors() {
-        d3.json(apiQuery, function(artwork) {
+        // if (queryToggle == 0) {
+        //     queryToggle = 1;
+        // } else {
+        //     queryToggle = 0;
+        // }
+        d3.json(queries[queryToggle], function(artwork) {
             var g = sunsCanvas.append("g")
                     .attr("data-age", counter)
+                    .attr("data-source", artwork.records[0].source)
                     .attr("class", "sun");
+
+            artwork.records.forEach(function (d) {
+                d.colors.forEach(function(d) {
+                    d.xOffset = 0;
+                    d.yOffset = 0;
+                });
+            });
 
             var a = g.selectAll(".dots")
                     .data(artwork.records)
@@ -99,12 +117,20 @@
             a.append("text")
                 .attr("dx", width/2)
                 .attr("dy", height/2)
+                .style("opacity", isLabelsOn ? 1 : 0)
                 .text(function(d) {return d.title; });  
+
+            a.append("text")
+                .attr("dx", width/2)
+                .attr("dy", height/2 + 20)
+                .style("opacity", isLabelsOn ? 1 : 0)
+                .text(function(d) {return "I'm from " + d.source; });  
 
             if (artwork.records[0].gallery) {
                 a.append("text")
                     .attr("dx", width/2)
-                    .attr("dy", height/2 + 20)
+                    .attr("dy", height/2 + 40)
+                    .style("opacity", isLabelsOn ? 1 : 0)
                     .text(function(d) {return "Visit me in gallery " + d.gallery.gallerynumber + " on floor " + d.gallery.floor; });  
             }
 
@@ -167,8 +193,25 @@
         }
     }
 
+    function deconstruct() {
+        d3.selectAll(".dot")
+            .transition()
+            .attr("cx", function(d) {var offset = getRandomInt(-50, 50); d.xOffset += offset; d3.select(this).attr("d", d); return parseInt(d3.select(this).attr("cx")) + offset})
+            .attr("cy", function(d) {var offset = getRandomInt(-50, 50); d.yOffset += offset; d3.select(this).attr("d", d); return parseInt(d3.select(this).attr("cy")) + offset})
+            .duration(500);
+    }
+
+    function reconstruct() {
+        d3.selectAll(".dot")
+            .transition()
+            .attr("cx", function(d) {var xOffsetOld = d.xOffset; d.xOffset = 0; return parseInt(d3.select(this).attr("cx")) - xOffsetOld;})
+            .attr("cy", function(d) {var yOffsetOld = d.yOffset; d.yOffset = 0; return parseInt(d3.select(this).attr("cy")) - yOffsetOld;})
+            .duration(500);        
+    }
+
     socket.on("start up", function(data) {
         multiplier = data.scaleMultiplier;
+        isLabelsOn = data.labelsOn;
         scaleSuns();
     });
 
@@ -185,6 +228,11 @@
         isPaused = !isPaused;
     });
 
+    socket.on("tell-me clicked", function() {
+        isLabelsOn = !isLabelsOn;
+        d3.selectAll("text").style("opacity", isLabelsOn ? 1 : 0);
+    });
+
     socket.on("lights clicked", function() {
         setLights();
     });
@@ -194,6 +242,14 @@
             .transition()
             .attr("transform", generateRandomTranslation)
             .duration(1500);
+    });
+
+    socket.on("deconstruct clicked", function() {
+        deconstruct();
+    });
+
+    socket.on("reconstruct clicked", function() {
+        reconstruct();
     });
 
     socket.on("end-times clicked", function() {

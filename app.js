@@ -68,13 +68,16 @@ var userSockets = io.of("/user-namespace");
 
 var sunsConfig = {
   controllerCount: 0,
+  screenCount: 0,
   screensUp: false,
+  labelsOn: false,
   scaleMultiplier: 1
 };
 
 // Track activity on the Lightbox screens
 screensSockets.on('connection', function(socket) {
   sunsConfig.screensUp = true;
+  sunsConfig.controllerCount +=1;
  
   socket.emit("start up", sunsConfig);
 
@@ -104,6 +107,7 @@ screensSockets.on('connection', function(socket) {
 
   socket.on("disconnect", function(data) {
     sunsConfig.screensUp = false;
+    sunsConfig.controllerCount -=1;
     userSockets.emit("screens up", sunsConfig.screensUp);
     controllerSockets.emit("screens up", sunsConfig.screensUp);
   });
@@ -128,8 +132,22 @@ controllerSockets.on("connection", function(socket) {
     screensSockets.emit("pause clicked");
   });
 
+  socket.on("tell-me clicked", function() {
+    sunsConfig.labelsOn = !sunsConfig.labelsOn;
+    screensSockets.emit("tell-me clicked");
+    controllerSockets.emit("tell-me state", sunsConfig.labelsOn);
+  });
+
   socket.on("lights clicked", function() {
     screensSockets.emit("lights clicked");
+  });
+
+  socket.on("deconstruct clicked", function() {
+    screensSockets.emit("deconstruct clicked");
+  });
+
+  socket.on("reconstruct clicked", function() {
+    screensSockets.emit("reconstruct clicked");
   });
 
   socket.on("scatter clicked", function() {
