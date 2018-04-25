@@ -15,10 +15,10 @@ router.get('/rijks', function(req, res, next) {
 	var qs = {
 		key: "G2sJRRM7",
 		format: "json",
-		imgonly: true,
+		imgonly: "True",
 		p: randomPageNumber,
 		ps: 1,
-		type: "painting"
+		// type: "painting"
 	};
 
 	var output = {
@@ -40,24 +40,37 @@ router.get('/rijks', function(req, res, next) {
 			output.records[0].title = r.artObjects[0].title;
 			output.records[0].url = r.artObjects[0].links.web;
 
-			if (r.artObjects[0].webImage) {
-				var colorService = "https://ham-color-service.herokuapp.com/extract";
-				var csQS = {
-					image_url: r.artObjects[0].webImage.url
-				};
+			var fullRecordUrl = r.artObjects[0].links.self;
 
-				request(colorService, {
-						qs: csQS
+			if (!error) {
+				request(fullRecordUrl, {
+					qs: qs
 					}, function(error, response, body) {
-						if (!error) {
-							var rr = JSON.parse(body);
-							output.records[0].colors = rr.colors;
-						}
+						var object = JSON.parse(body);
 
-						res.send(output);
-					});				
+						if (object.artObject.webImage) {
+
+							var colorService = "https://ham-color-service.herokuapp.com/extract";
+							var csQS = {
+								image_url: object.artObject.webImage.url
+							};
+
+							request(colorService, {
+									qs: csQS
+								}, function(error, response, body) {
+									if (!error) {
+										var rr = JSON.parse(body);
+										output.records[0].colors = rr.colors;
+									}
+
+									res.send(output);
+								});				
+						} else {
+							res.send(output);
+						}
+					});
 			} else {
-				res.send(output);
+				res.send("");
 			}
 
 		});

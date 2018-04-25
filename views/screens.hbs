@@ -30,6 +30,7 @@
     var counter = 0;
     var threshold = 50;
     var isPaused = false;
+    var busy = false;
     var isLabelsOn = false;
     var multiplier = 1;
     var ringScaleFactor = 100;
@@ -75,13 +76,14 @@
     });
 
     function doWork() {
-        if (!isPaused) {
+        if (!isPaused && !busy) {
             blastColors();
             eraseColors();
         }
     }
 
     function blastColors() {
+        busy = true;
         // if (queryToggle == 0) {
         //     queryToggle = 1;
         // } else {
@@ -120,19 +122,19 @@
                 .style("opacity", isLabelsOn ? 1 : 0)
                 .text(function(d) {return d.title; });  
 
-            a.append("text")
-                .attr("dx", width/2)
-                .attr("dy", height/2 + 20)
-                .style("opacity", isLabelsOn ? 1 : 0)
-                .text(function(d) {return "I'm from " + d.source; });  
-
             if (artwork.records[0].gallery) {
                 a.append("text")
                     .attr("dx", width/2)
-                    .attr("dy", height/2 + 40)
+                    .attr("dy", height/2 + 20)
                     .style("opacity", isLabelsOn ? 1 : 0)
                     .text(function(d) {return "Visit me in gallery " + d.gallery.gallerynumber + " on floor " + d.gallery.floor; });  
             }
+
+            // a.append("text")
+            //     .attr("dx", width/2)
+            //     .attr("dy", height/2 + 40)
+            //     .style("opacity", isLabelsOn ? 1 : 0)
+            //     .text(function(d) {return "I'm from " + d.source; });  
 
             a.transition()
                 .attr("transform", generateRandomTranslation)
@@ -145,6 +147,7 @@
                 "colors": artwork.records[0].colors
             });
 
+            busy = false;
             counter++;
         });
     }
