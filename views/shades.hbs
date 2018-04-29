@@ -2,6 +2,8 @@
 <script src="javascripts/d3/d3.v3.min.js"></script>
 <script type="text/javascript">
 
+    d3.select("#suns").style("background", "#000000");
+
     d3.selection.prototype.moveToFront = function() {  
         return this.each(function(){
             this.parentNode.appendChild(this);
