@@ -78,7 +78,7 @@ var sunsConfig = {
 // Track activity on the Lightbox screens
 screensSockets.on('connection', function(socket) {
   sunsConfig.screensUp = true;
-  sunsConfig.controllerCount +=1;
+  sunsConfig.screenCount +=1;
  
   socket.emit("start up", sunsConfig);
 
@@ -109,7 +109,7 @@ screensSockets.on('connection', function(socket) {
 
   socket.on("disconnect", function(data) {
     sunsConfig.screensUp = false;
-    sunsConfig.controllerCount -=1;
+    sunsConfig.screenCount -=1;
 
     statsSockets.emit("stats update", sunsConfig);
     userSockets.emit("screens up", sunsConfig.screensUp);
