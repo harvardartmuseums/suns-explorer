@@ -14,6 +14,10 @@
 			<button id="deconstruct" class="btn btn-outline-secondary btn-lg w-100">Deconstruct</button>
 			<button id="reconstruct" class="btn btn-outline-secondary btn-lg w-100">Reconstruct</button>
 		</div>
+		<div class="btn-group btn-block d-flex" role="group">
+			<button id="slower" class="btn btn-outline-secondary btn-lg w-100">Slower</button>
+			<button id="faster" class="btn btn-outline-secondary btn-lg w-100">Faster</button>
+		</div>
 		<button id="big-bang" class="btn btn-outline-secondary btn-lg btn-block">Big Bang</button>
 		<button id="end-times" class="btn btn-outline-secondary btn-lg btn-block">End Times</button>
 	</div>
@@ -99,6 +103,14 @@
 
 	$("#deconstruct").click(function() {
 		socket.emit("deconstruct clicked")
+	});
+
+	$("#slower").click(function() {
+		socket.emit("slower clicked")
+	});
+
+	$("#faster").click(function() {
+		socket.emit("faster clicked")
 	});
 
 	$("#scatter").click(function() {

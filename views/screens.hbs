@@ -33,8 +33,10 @@
     var busy = false;
     var isLabelsOn = false;
     var multiplier = 1;
+    var speed = 1;
     var ringScaleFactor = 100;
     var lightsOn = true;
+    var timer;
 
     // Create the SVG container and set the origin.
     var svg = d3.select("#suns").append("svg")
@@ -43,8 +45,6 @@
 
     var sunsCanvas = svg.append("g")
         .attr("transform", "translate(0,0)");
-
-    window.setInterval(doWork, 1000);
 
     $(window).on('keydown', function (e) {
         switch (e.keyCode) {
@@ -138,6 +138,7 @@
 
             a.transition()
                 .attr("transform", generateRandomTranslation)
+                .duration(1000*speed)
                 .delay(400);
 
             socket.emit("new sun", {
@@ -174,6 +175,11 @@
             .transition()
             .attr("r", calculateRadius)
             .delay(200);
+    }
+
+    function setSpeed() {
+        window.clearInterval(timer);
+        timer = window.setInterval(doWork, 1000*speed);
     }
 
     function eraseColors() {
@@ -215,7 +221,9 @@
     socket.on("start up", function(data) {
         multiplier = data.scaleMultiplier;
         isLabelsOn = data.labelsOn;
+        speed = data.scaleMultiplier;
         scaleSuns();
+        setSpeed();
     });
 
     socket.on("object clicked", function(objectid) {
@@ -355,5 +363,10 @@
     socket.on("set multiplier", function(value) {
         multiplier = value;
         scaleSuns();
+    })
+
+    socket.on("set speed multiplier", function(value) {
+        speed = value;
+        setSpeed();
     })
 </script>

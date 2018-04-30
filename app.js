@@ -72,7 +72,8 @@ var sunsConfig = {
   screenCount: 0,
   screensUp: false,
   labelsOn: false,
-  scaleMultiplier: 1
+  scaleMultiplier: 1,
+  speedMultiplier: 1
 };
 
 // Track activity on the Lightbox screens
@@ -155,6 +156,24 @@ controllerSockets.on("connection", function(socket) {
 
   socket.on("reconstruct clicked", function() {
     screensSockets.emit("reconstruct clicked");
+  });
+
+  socket.on("slower clicked", function() {
+    if (sunsConfig.speedMultiplier < 10) {
+      sunsConfig.speedMultiplier +=1      
+      
+      statsSockets.emit("stats update", sunsConfig);
+      screensSockets.emit("set speed multiplier", sunsConfig.speedMultiplier);
+    }
+  });
+
+  socket.on("faster clicked", function() {
+    if (sunsConfig.speedMultiplier > 1) {
+      sunsConfig.speedMultiplier -=1      
+      
+      statsSockets.emit("stats update", sunsConfig);
+      screensSockets.emit("set speed multiplier", sunsConfig.speedMultiplier);
+    }
   });
 
   socket.on("scatter clicked", function() {
