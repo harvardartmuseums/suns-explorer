@@ -32,19 +32,22 @@
     function activateItem(e) {
     	socket.emit("object clicked", e.data.objectid);
 
-		var apiQuery = "/data/object/" + e.data.objectid;
 		var currentEl = $(this);
 
-		$.getJSON(apiQuery, function(data) {
-			if (data.images.length > 0) {
-				var container = $("<div/>");
-				$(container).append(
-					$("<img/>")
-						.attr("src", data.images[0].baseimageurl + "?width=100")
-				);
-				$(currentEl).append(container);
-			}
-		});
+        if ($(currentEl).find("img").length === 0) {
+            var apiQuery = "/data/object/" + e.data.objectid;
+
+    		$.getJSON(apiQuery, function(data) {
+    			if (data.images.length > 0) {
+    				var container = $("<div/>");
+    				$(container).append(
+    					$("<img/>")
+    						.attr("src", data.images[0].baseimageurl + "?width=100")
+    				);
+    				$(currentEl).append(container);
+    			}
+    		});
+        }
     }
 
 </script>
