@@ -28,5 +28,10 @@ router.get('/controller', function(req, res, next) {
   res.render('controller', { title: siteTitle });
 });
 
+/* GET stats page. */
+router.get('/stats', function(req, res, next) {
+  res.render('statistics', { title: siteTitle });
+});
+
 
 module.exports = router;

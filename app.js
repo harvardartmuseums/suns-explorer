@@ -65,6 +65,7 @@ var screensSockets = io.of("/screens-namespace");
 var shadesSockets = io.of("/shades-namespace");
 var controllerSockets = io.of("/controller-namespace");
 var userSockets = io.of("/user-namespace");
+var statsSockets = io.of("/stats-namespace");
 
 var sunsConfig = {
   controllerCount: 0,
@@ -81,6 +82,7 @@ screensSockets.on('connection', function(socket) {
  
   socket.emit("start up", sunsConfig);
 
+  statsSockets.emit("stats update", sunsConfig);
   userSockets.emit("screens up", sunsConfig.screensUp);
   controllerSockets.emit("screens up", sunsConfig.screensUp);
 
@@ -108,6 +110,8 @@ screensSockets.on('connection', function(socket) {
   socket.on("disconnect", function(data) {
     sunsConfig.screensUp = false;
     sunsConfig.controllerCount -=1;
+
+    statsSockets.emit("stats update", sunsConfig);
     userSockets.emit("screens up", sunsConfig.screensUp);
     controllerSockets.emit("screens up", sunsConfig.screensUp);
   });
@@ -126,6 +130,7 @@ userSockets.on("connection", function(socket) {
 controllerSockets.on("connection", function(socket) {
   sunsConfig.controllerCount +=1;
 
+  statsSockets.emit("stats update", sunsConfig);
   controllerSockets.emit("screens up", sunsConfig.screensUp);
 
   socket.on("pause clicked", function() {
@@ -134,6 +139,8 @@ controllerSockets.on("connection", function(socket) {
 
   socket.on("tell-me clicked", function() {
     sunsConfig.labelsOn = !sunsConfig.labelsOn;
+
+    statsSockets.emit("stats update", sunsConfig);
     screensSockets.emit("tell-me clicked");
     controllerSockets.emit("tell-me state", sunsConfig.labelsOn);
   });
@@ -164,12 +171,22 @@ controllerSockets.on("connection", function(socket) {
 
   socket.on("multiplier clicked", function(multiplier) {
     sunsConfig.scaleMultiplier = multiplier;
+
+    statsSockets.emit("stats update", sunsConfig);
     screensSockets.emit("set multiplier", sunsConfig.scaleMultiplier);
   });
 
   socket.on("disconnect", function() {
     sunsConfig.controllerCount -=1;
+
+    statsSockets.emit("stats update", sunsConfig);
   });
+});
+
+
+// Track activity of stats users
+statsSockets.on("connection", function(socket) {
+  socket.emit("stats update", sunsConfig);
 });
 
 module.exports = app;

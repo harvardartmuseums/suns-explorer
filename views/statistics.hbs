@@ -1,0 +1,30 @@
+<nav class="navbar navbar-dark bg-dark">
+	<h1 class="navbar-brand">Suns Explorer Statistics</h1>
+	<h6 class="navbar-text" id="status"></h6>
+</nav>
+<div id="stats" class="container">
+	<ul class="list-group list-group-flush">
+		<li class="list-group-item"><span>Controllers: </span><span id="num-controllers">0</span></li>
+		<li class="list-group-item"><span>Screens: </span><span id="num-screens">0</span></li>
+		<li class="list-group-item"><span>Labels: </span><span id="labels-state"></span></li>
+		<li class="list-group-item"><span>Suns Size: </span><span id="size-state"></span></li>
+	</ul>
+</div>
+
+
+<script type="text/javascript">
+
+    var socket = io('/stats-namespace');
+
+    socket.on("stats update", function(data) {
+    	updateStats(data);
+    });
+
+    function updateStats(stats) {
+    	$("#num-controllers").text(stats.controllerCount);
+    	$("#num-screens").text(stats.screensCount);
+    	$("#labels-state").text(stats.labelsOn ? "on" : "off");
+    	$("#size-state").text(stats.scaleMultiplier);
+    }
+
+</script>
