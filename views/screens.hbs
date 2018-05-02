@@ -16,7 +16,7 @@
         sort: "random",
         color: "any",
         classification: "Paintings",
-        fields: "objectid,title,url,colors,gallery",
+        fields: "objectid,title,url,colors,gallery,totalpageviews",
         size: 1
     };
     queries.push("/data/object?" + $.param(apiParameters));
@@ -138,7 +138,7 @@
 
             a.transition()
                 .attr("transform", generateRandomTranslation)
-                .duration(1000*speed)
+                .duration(function(d) {return (100*speed)*d.totalpageviews;})
                 .delay(400);
 
             socket.emit("new sun", {
@@ -249,10 +249,15 @@
     });
 
     socket.on("scatter clicked", function() {
+        // d3.selectAll(".dots")  
+        //     .transition()
+        //     .attr("transform", generateRandomTranslation)
+        //     .duration(1500);
+
         d3.selectAll(".dots")  
             .transition()
             .attr("transform", generateRandomTranslation)
-            .duration(1500);
+            .duration(function(d) {return (100*speed)*d.totalpageviews;});
     });
 
     socket.on("deconstruct clicked", function() {
