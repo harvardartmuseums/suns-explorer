@@ -14,13 +14,18 @@
 			<button id="deconstruct" class="btn btn-outline-secondary btn-lg w-100">Deconstruct</button>
 			<button id="reconstruct" class="btn btn-outline-secondary btn-lg w-100">Reconstruct</button>
 		</div>
-		<div class="btn-group btn-block d-flex" role="group">
-			<button id="slower" class="btn btn-outline-secondary btn-lg w-100">Slower</button>
-			<button id="faster" class="btn btn-outline-secondary btn-lg w-100">Faster</button>
-		</div>
 		<button id="big-bang" class="btn btn-outline-secondary btn-lg btn-block">Big Bang</button>
 		<button id="end-times" class="btn btn-outline-secondary btn-lg btn-block">End Times</button>
 	</div>
+<!-- 	<div class="mt-3">
+		<h3>Apply Gravity</h3>
+		<div class="btn-group btn-block d-flex" role="group">
+			<button id="gravity-0" class="btn btn-outline-secondary btn-lg w-100">Anti-</button>
+			<button id="gravity-1" class="btn btn-outline-secondary btn-lg w-100">1g</button>
+			<button id="gravity-2" class="btn btn-outline-secondary btn-lg w-100">2g</button>
+			<button id="gravity-3" class="btn btn-outline-secondary btn-lg w-100">3g</button>
+		</div>
+	</div> -->
 	<div class="mt-3">
 		<h3>Resize Suns</h3>
 		<div class="btn-group btn-block d-flex" role="group">
@@ -103,14 +108,6 @@
 
 	$("#deconstruct").click(function() {
 		socket.emit("deconstruct clicked")
-	});
-
-	$("#slower").click(function() {
-		socket.emit("slower clicked")
-	});
-
-	$("#faster").click(function() {
-		socket.emit("faster clicked")
 	});
 
 	$("#scatter").click(function() {
