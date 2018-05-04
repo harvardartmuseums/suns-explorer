@@ -1,0 +1,53 @@
+<nav class="navbar navbar-dark bg-dark">
+	<h1 class="navbar-brand">Suns Explorer</h1>
+	<h6 class="navbar-text" id="status"></h6>
+</nav>
+<div id="list"></div>
+
+<script type="text/javascript">
+
+    var socket = io('/user-namespace');
+
+    socket.on("screens up", function(data) {
+    	setScreenStatus(data);
+    });
+
+    socket.on("new sun", function(data) {
+    	updateList(data);
+    });
+
+    function updateList(object) {
+    	var item = $("<div/>")
+    		.click(object, activateItem)
+    		.addClass("item")
+    		.text(object.title);
+
+    	$("#list").append(item);
+    }
+
+    function setScreenStatus(status) {
+    	$("#status").text(status ? "Screens are on" : "Screen are off");
+    }
+
+    function activateItem(e) {
+    	socket.emit("object clicked", e.data.objectid);
+
+		var currentEl = $(this);
+
+        if ($(currentEl).find("img").length === 0) {
+            var apiQuery = "/data/object/" + e.data.objectid;
+
+    		$.getJSON(apiQuery, function(data) {
+    			if (data.images.length > 0) {
+    				var container = $("<div/>");
+    				$(container).append(
+    					$("<img/>")
+    						.attr("src", data.images[0].baseimageurl + "?width=100")
+    				);
+    				$(currentEl).append(container);
+    			}
+    		});
+        }
+    }
+
+</script>
