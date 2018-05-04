@@ -10,8 +10,6 @@
 
     var socket = io('/screens-namespace');
 
-    var queryToggle = 0;
-    var queries = [];
     var apiParameters = {
         sort: "random",
         color: "any",
@@ -19,8 +17,7 @@
         fields: "objectid,title,url,colors,gallery,totalpageviews",
         size: 1
     };
-    queries.push("/data/object?" + $.param(apiParameters));
-    queries.push("/data/rijks");
+    var query = "/data/object?" + $.param(apiParameters);
 
     // Chart dimensions.
     var margin = {top: 0, right: 0, bottom: 0, left: 0},
@@ -84,12 +81,7 @@
 
     function blastColors() {
         busy = true;
-        // if (queryToggle == 0) {
-        //     queryToggle = 1;
-        // } else {
-        //     queryToggle = 0;
-        // }
-        d3.json(queries[queryToggle], function(artwork) {
+        d3.json(query, function(artwork) {
             var g = sunsCanvas.append("g")
                     .attr("data-age", counter)
                     .attr("data-source", artwork.records[0].source)
