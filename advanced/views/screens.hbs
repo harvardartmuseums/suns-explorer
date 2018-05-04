@@ -122,12 +122,6 @@
                     .text(function(d) {return "Visit me in gallery " + d.gallery.gallerynumber + " on floor " + d.gallery.floor; });  
             }
 
-            // a.append("text")
-            //     .attr("dx", width/2)
-            //     .attr("dy", height/2 + 40)
-            //     .style("opacity", isLabelsOn ? 1 : 0)
-            //     .text(function(d) {return "I'm from " + d.source; });  
-
             a.transition()
                 .attr("transform", generateRandomTranslation)
                 .duration(function(d) {return (100*speed)*d.totalpageviews;})
@@ -241,11 +235,6 @@
     });
 
     socket.on("scatter clicked", function() {
-        // d3.selectAll(".dots")  
-        //     .transition()
-        //     .attr("transform", generateRandomTranslation)
-        //     .duration(1500);
-
         d3.selectAll(".dots")  
             .transition()
             .attr("transform", generateRandomTranslation)
