@@ -1,9 +1,9 @@
-# Suns Explorer
+# Suns Explorer (Basic)
 
 ## Requirements
 
-A web server (such as Nginx or Apache) capable of hosting plain HTML and Javascript files  
-A [Harvard Art Museums API key](http://www.harvardartmuseums.org/collections/api)  
+* A web server (such as Nginx or Apache) capable of hosting plain HTML and Javascript files  
+* A [Harvard Art Museums API key](http://www.harvardartmuseums.org/collections/api)  
 
 ## Setup
 
