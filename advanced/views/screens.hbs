@@ -82,60 +82,63 @@
     function blastColors() {
         busy = true;
         d3.json(query, function(artwork) {
-            var g = sunsCanvas.append("g")
-                    .attr("data-age", counter)
-                    .attr("data-source", artwork.records[0].source)
-                    .attr("class", "sun");
+            if (artwork) {
 
-            artwork.records.forEach(function (d) {
-                d.colors.forEach(function(d) {
-                    d.xOffset = 0;
-                    d.yOffset = 0;
+                var g = sunsCanvas.append("g")
+                        .attr("data-age", counter)
+                        .attr("data-source", artwork.records[0].source)
+                        .attr("class", "sun");
+
+                artwork.records.forEach(function (d) {
+                    d.colors.forEach(function(d) {
+                        d.xOffset = 0;
+                        d.yOffset = 0;
+                    });
                 });
-            });
 
-            var a = g.selectAll(".dots")
-                    .data(artwork.records)
-                .enter().append("g")
-                    .attr("class", "dots");
+                var a = g.selectAll(".dots")
+                        .data(artwork.records)
+                    .enter().append("g")
+                        .attr("class", "dots");
 
-            a.selectAll(".dot")
-                    .data(function(d) {return d.colors;})
-                .enter().append("circle")
-                    .attr("class", "dot")
-                    .style("fill", function(d) { return d.color; })
-                    .attr("cx", width/2)
-                    .attr("cy", height/2)
-                    .attr("r", calculateRadius);
+                a.selectAll(".dot")
+                        .data(function(d) {return d.colors;})
+                    .enter().append("circle")
+                        .attr("class", "dot")
+                        .style("fill", function(d) { return d.color; })
+                        .attr("cx", width/2)
+                        .attr("cy", height/2)
+                        .attr("r", calculateRadius);
 
-            a.append("text")
-                .attr("dx", width/2)
-                .attr("dy", height/2)
-                .style("opacity", isLabelsOn ? 1 : 0)
-                .text(function(d) {return d.title; });  
-
-            if (artwork.records[0].gallery) {
                 a.append("text")
                     .attr("dx", width/2)
-                    .attr("dy", height/2 + 20)
+                    .attr("dy", height/2)
                     .style("opacity", isLabelsOn ? 1 : 0)
-                    .text(function(d) {return "Visit me in gallery " + d.gallery.gallerynumber + " on floor " + d.gallery.floor; });  
+                    .text(function(d) {return d.title; });  
+
+                if (artwork.records[0].gallery) {
+                    a.append("text")
+                        .attr("dx", width/2)
+                        .attr("dy", height/2 + 20)
+                        .style("opacity", isLabelsOn ? 1 : 0)
+                        .text(function(d) {return "Visit me in gallery " + d.gallery.gallerynumber + " on floor " + d.gallery.floor; });  
+                }
+
+                a.transition()
+                    .attr("transform", generateRandomTranslation)
+                    .duration(function(d) {return (100*speed)*d.totalpageviews;})
+                    .delay(400);
+
+                socket.emit("new sun", {
+                    "url": artwork.records[0].url,
+                    "title": artwork.records[0].title,
+                    "objectid": artwork.records[0].objectid,
+                    "colors": artwork.records[0].colors
+                });
+
+                counter++;
             }
-
-            a.transition()
-                .attr("transform", generateRandomTranslation)
-                .duration(function(d) {return (100*speed)*d.totalpageviews;})
-                .delay(400);
-
-            socket.emit("new sun", {
-                "url": artwork.records[0].url,
-                "title": artwork.records[0].title,
-                "objectid": artwork.records[0].objectid,
-                "colors": artwork.records[0].colors
-            });
-
             busy = false;
-            counter++;
         });
     }
 

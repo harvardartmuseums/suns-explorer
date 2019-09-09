@@ -24,13 +24,19 @@ router.get('/:endpoint', function(req, res, next) {
     request(url, {
 			qs: qs
 		}, function(error, response, body) {
-			var r = JSON.parse(body);
+			if (error) {
+				console.log(error);
+				res.send('');
 
-			for (var i = r.records.length - 1; i >= 0; i--) {
-				r.records[i].source = "Harvard Art Museums";
+			} else {
+				var r = JSON.parse(body);
+	
+				for (var i = r.records.length - 1; i >= 0; i--) {
+					r.records[i].source = "Harvard Art Museums";
+				}
+	
+				res.send(r);
 			}
-
-			res.send(r);
 		});
 
 });
