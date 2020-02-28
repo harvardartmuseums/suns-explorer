@@ -72,6 +72,7 @@ var sunsConfig = {
   screenCount: 0,
   screensUp: false,
   labelsOn: false,
+  lightsOn: true,
   scaleMultiplier: 1,
   speedMultiplier: 1
 };
@@ -98,6 +99,8 @@ screensSockets.on('connection', function(socket) {
   
   socket.on("end-times ended", function(data) {
     controllerSockets.emit("end-times ended", data);
+    
+    screensSockets.emit("start up", sunsConfig);
   });
 
   socket.on("big-bang started", function(data) {
@@ -106,6 +109,8 @@ screensSockets.on('connection', function(socket) {
   
   socket.on("big-bang ended", function(data) {
     controllerSockets.emit("big-bang ended", data);
+    
+    screensSockets.emit("start up", sunsConfig);
   });
 
   socket.on("disconnect", function(data) {
@@ -147,7 +152,11 @@ controllerSockets.on("connection", function(socket) {
   });
 
   socket.on("lights clicked", function() {
-    screensSockets.emit("lights clicked");
+    sunsConfig.lightsOn = !sunsConfig.lightsOn;
+    
+    statsSockets.emit("stats update", sunsConfig);
+    screensSockets.emit("lights clicked", sunsConfig.lightsOn);
+    controllerSockets.emit("lights state", sunsConfig.lightsOn);
   });
 
   socket.on("deconstruct clicked", function() {

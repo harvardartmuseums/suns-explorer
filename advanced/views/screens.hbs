@@ -48,7 +48,6 @@
             case 37: // left
                 break;
             case 38: //up
-                setLights();
                 break;
             case 39: // right
                 break;
@@ -181,14 +180,19 @@
                 .each("end", function() {d3.select(this).remove();});
     }
 
-    function setLights() {
-        lightsOn = !lightsOn;
-
+    function setLights(duration) {
+        var color;
         if (lightsOn) {
-            d3.select("#suns").style("background", "#ffffff");
+            color = "#ffffff";
         } else {
-            d3.select("#suns").style("background", "#000000");  
+            color = "#000000";
         }
+
+        d3.select("#suns")  
+            .transition()
+            .ease("exp-in")
+            .style("background", color)
+            .duration(duration);        
     }
 
     function deconstruct() {
@@ -211,8 +215,11 @@
         multiplier = data.scaleMultiplier;
         isLabelsOn = data.labelsOn;
         speed = data.scaleMultiplier;
+        lightsOn = data.lightsOn;
+
         scaleSuns();
         setSpeed();
+        setLights(500);
     });
 
     socket.on("object clicked", function(objectid) {
@@ -233,8 +240,9 @@
         d3.selectAll("text").style("opacity", isLabelsOn ? 1 : 0);
     });
 
-    socket.on("lights clicked", function() {
-        setLights();
+    socket.on("lights clicked", function(data) {
+        lightsOn = data;
+        setLights(500);
     });
 
     socket.on("scatter clicked", function() {
@@ -254,18 +262,14 @@
 
     socket.on("end-times clicked", function() {
         isPaused = true;
-        lightsOn = false;
-
+        
         socket.emit("end-times started");
 
         d3.selectAll(".dots")
             .transition();
 
-        d3.select("#suns")  
-            .transition()
-            .ease("exp-in")
-            .style("background", "#000000")
-            .duration(1000);
+        lightsOn = false;
+        setLights(1000);
 
         d3.selectAll("text")  
             .transition()
@@ -281,17 +285,10 @@
             .duration(750);
 
         setTimeout(function() {
-            lightsOn = true;
-
             d3.selectAll(".sun")
                 .remove();
 
-            d3.select("#suns")  
-                .transition()
-                .ease("exp-in")
-                .style("background", "#ffffff")
-                .duration(750)
-                .each("end", function() {isPaused = false});
+            isPaused = false;
 
             socket.emit("end-times ended");
         }, 5000);
@@ -331,22 +328,13 @@
                 .attr("r", calculateRadius)
                 .duration(500);
 
-        d3.select("#suns")  
-            .transition()
-                .ease("exp-in")
-                .style("background", "#000000")
-                .duration(1500)
-            .transition()
-                .delay(5000)
-                .ease("exp-out")
-                .style("background", "#ffffff")
-                .duration(500);       
+        //cast the universe into darkness
+        lightsOn = false;
+        setLights(1500);   
 
         setTimeout(function() {
-            lightsOn = true;
-
             socket.emit("big-bang ended");
-        }, 7500);                      
+        }, 4500);                      
     });
 
     socket.on("set multiplier", function(value) {
