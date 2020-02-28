@@ -8,6 +8,7 @@
 		<li class="list-group-item"><span>Screens: </span><span id="num-screens">0</span></li>
 		<li class="list-group-item"><span>Labels: </span><span id="labels-state"></span></li>
 		<li class="list-group-item"><span>Lights: </span><span id="lights-state"></span></li>
+		<li class="list-group-item"><span>Paused: </span><span id="paused-state"></span></li>
 		<li class="list-group-item"><span>Suns Size: </span><span id="size-state"></span></li>
 		<li class="list-group-item"><span>Speed: </span><span id="speed-state"></span></li>
 	</ul>
@@ -27,6 +28,7 @@
     	$("#num-screens").text(stats.screenCount);
     	$("#labels-state").text(stats.labelsOn ? "on" : "off");
     	$("#lights-state").text(stats.lightsOn ? "on" : "off");
+    	$("#paused-state").text(stats.paused ? "yes" : "no");
     	$("#size-state").text(stats.scaleMultiplier);
     	$("#speed-state").text(stats.speedMultiplier);
     }

@@ -6,7 +6,7 @@
 
 	<div class="mt-3">
 		<h3>Activate Suns</h3>
-		<button id="pause" class="btn btn-outline-secondary btn-lg btn-block">Pause</button>
+		<button id="pause" class="btn btn-outline-secondary btn-lg btn-block">Stop Fusing Atoms</button>
 		<button id="lights" class="btn btn-outline-secondary btn-lg btn-block">I Prefer Darkness</button>
 		<button id="tell-me" class="btn btn-outline-secondary btn-lg btn-block">Tell Me</button>
 		<button id="scatter" class="btn btn-outline-secondary btn-lg btn-block">Scatter</button>
@@ -62,6 +62,10 @@
 
     socket.on("tell-me state", function(data) {
     	$("#tell-me").text(data ? "Tell Me Not" : "Tell Me");
+    });
+
+    socket.on("pause state", function(data) {
+    	$("#pause").text(data ? "Resume Star Formation" : "Stop Fusing Atoms");
     });
 
     socket.on("lights state", function(data) {

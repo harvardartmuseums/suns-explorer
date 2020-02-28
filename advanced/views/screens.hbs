@@ -56,7 +56,6 @@
             case 73: // i
                 break;
             case 80: // p
-                isPaused = !isPaused;
                 break;
             default:
                 //do nothing
@@ -216,6 +215,7 @@
         isLabelsOn = data.labelsOn;
         speed = data.scaleMultiplier;
         lightsOn = data.lightsOn;
+        isPaused = data.paused;
 
         scaleSuns();
         setSpeed();
@@ -288,8 +288,6 @@
             d3.selectAll(".sun")
                 .remove();
 
-            isPaused = false;
-
             socket.emit("end-times ended");
         }, 5000);
     });
@@ -313,8 +311,7 @@
                 .delay(5000)    
                 .ease("exp-out")
                 .attr("transform", generateRandomTranslation)
-                .duration(500)
-                .each("end", function() {isPaused = false});
+                .duration(500);
 
         //scale the suns down to nothing; pause a moment; restore them to their actual size
         d3.selectAll(".dot")

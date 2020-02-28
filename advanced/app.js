@@ -73,6 +73,7 @@ var sunsConfig = {
   screensUp: false,
   labelsOn: false,
   lightsOn: true,
+  paused: false,
   scaleMultiplier: 1,
   speedMultiplier: 1
 };
@@ -140,7 +141,11 @@ controllerSockets.on("connection", function(socket) {
   controllerSockets.emit("screens up", sunsConfig.screensUp);
 
   socket.on("pause clicked", function() {
-    screensSockets.emit("pause clicked");
+    sunsConfig.paused = !sunsConfig.paused;
+    
+    statsSockets.emit("stats update", sunsConfig);
+    screensSockets.emit("pause clicked", sunsConfig.paused);
+    controllerSockets.emit("pause state", sunsConfig.paused);
   });
 
   socket.on("tell-me clicked", function() {
