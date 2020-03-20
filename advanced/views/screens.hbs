@@ -1,13 +1,6 @@
 <div id="suns"></div>
 <script src="javascripts/d3/d3.v3.min.js"></script>
 <script type="text/javascript">
-
-    d3.selection.prototype.moveToFront = function() {  
-        return this.each(function(){
-            this.parentNode.appendChild(this);
-        });
-    };
-
     var socket = io('/screens-namespace');
 
     var apiParameters = {
@@ -79,6 +72,11 @@
 
     function blastColors() {
         busy = true;
+        origin = {
+            x: width/2,
+            y: height/2
+        };
+
         d3.json(query, function(artwork) {
             if (artwork) {
 
@@ -104,20 +102,20 @@
                     .enter().append("circle")
                         .attr("class", "dot")
                         .style("fill", function(d) { return d.color; })
-                        .attr("cx", width/2)
-                        .attr("cy", height/2)
+                        .attr("cx", origin.x)
+                        .attr("cy", origin.y)
                         .attr("r", calculateRadius);
 
                 a.append("text")
-                    .attr("dx", width/2)
-                    .attr("dy", height/2)
+                    .attr("dx", origin.x)
+                    .attr("dy", origin.y)
                     .style("opacity", isLabelsOn ? 1 : 0)
                     .text(function(d) {return d.title; });  
 
                 if (artwork.records[0].gallery) {
                     a.append("text")
-                        .attr("dx", width/2)
-                        .attr("dy", height/2 + 20)
+                        .attr("dx", origin.x)
+                        .attr("dy", origin.y + 20)
                         .style("opacity", isLabelsOn ? 1 : 0)
                         .text(function(d) {return "Visit me in gallery " + d.gallery.gallerynumber + " on floor " + d.gallery.floor; });  
                 }
@@ -223,12 +221,7 @@
     });
 
     socket.on("object clicked", function(objectid) {
-        var s = d3.selectAll(".dots")
-            .filter(function(d) {return d.objectid === objectid})
-        
-        s.each(function() {
-            d3.select(this.parentNode).moveToFront();
-        })
+        // do something awesome and spacey
     });
 
     socket.on("pause clicked", function() {
