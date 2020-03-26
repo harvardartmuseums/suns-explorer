@@ -10,6 +10,7 @@
 		<button id="lights" class="btn btn-outline-secondary btn-lg btn-block">I Prefer Darkness</button>
 		<button id="tell-me" class="btn btn-outline-secondary btn-lg btn-block">Tell Me</button>
 		<button id="scatter" class="btn btn-outline-secondary btn-lg btn-block">Scatter</button>
+		<button id="systematizer" class="btn btn-outline-secondary btn-lg btn-block">Solar System-atize It</button>
 		<div class="btn-group btn-block d-flex" role="group">
 			<button id="deconstruct" class="btn btn-outline-secondary btn-lg w-100">Deconstruct</button>
 			<button id="reconstruct" class="btn btn-outline-secondary btn-lg w-100">Reconstruct</button>
@@ -72,6 +73,10 @@
     	$("#lights").text(data ? "I Prefer Darkness" : "I Prefer Lightness");
     });
 
+    socket.on("systematizer state", function(data) {
+    	$("#systematizer").text(data === 0 ? "Solar System-atize It" : "Sun-ify It");
+    });
+
     socket.on("end-times started", function(data) {
 		$("#overlay-message").text(messages[0]);
 
@@ -120,6 +125,10 @@
 
 	$("#scatter").click(function() {
 		socket.emit("scatter clicked")
+	});
+
+	$("#systematizer").click(function() {
+		socket.emit("systematizer clicked")
 	});
 
 	$("#big-bang").click(function() {

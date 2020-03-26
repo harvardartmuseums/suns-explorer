@@ -48,3 +48,17 @@ a:hover {color:#ffffff;background: #000000;}
     width: 27rem;
   }
 }
+
+/* System animations */
+.rotate-path {
+  animation-name: spin;
+  animation-timing-function: linear;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}

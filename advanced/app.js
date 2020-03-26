@@ -75,7 +75,8 @@ var sunsConfig = {
   lightsOn: true,
   paused: false,
   scaleMultiplier: 1,
-  speedMultiplier: 1
+  speedMultiplier: 1,
+  systemState: 1  // Systems on (1) or off (0)
 };
 
 // Track activity on the Lightbox screens
@@ -192,6 +193,14 @@ controllerSockets.on("connection", function(socket) {
 
   socket.on("scatter clicked", function() {
     screensSockets.emit("scatter clicked");
+  });
+
+  socket.on("systematizer clicked", function() {
+    sunsConfig.systemState = sunsConfig.systemState === 1 ? 0 : 1;
+    
+    statsSockets.emit("stats update", sunsConfig);
+    screensSockets.emit("systematizer clicked", sunsConfig.systemState);
+    controllerSockets.emit("systematizer state", sunsConfig.systemState);
   });
 
   socket.on("end-times clicked", function() {
