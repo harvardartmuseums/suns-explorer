@@ -57,6 +57,13 @@
 
     var socket = io('/controller-namespace');
 
+    socket.on("start up", function(data) {
+    	$("#tell-me").text(data.labelsOn ? "Tell Me Not" : "Tell Me");
+    	$("#pause").text(data.paused ? "Resume Star Formation" : "Stop Fusing Atoms");
+    	$("#lights").text(data.lightsOn ? "I Prefer Darkness" : "I Prefer Lightness");
+    	$("#systematizer").text(data.systemState === 0 ? "Solar System-atize It" : "Sun-ify It");
+    });
+
     socket.on("screens up", function(data) {
     	setScreenStatus(data);
     });

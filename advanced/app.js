@@ -76,7 +76,7 @@ var sunsConfig = {
   paused: false,
   scaleMultiplier: 1,
   speedMultiplier: 1,
-  systemState: 1  // Systems on (1) or off (0)
+  systemState: 0  // Systems on (1) or off (0)
 };
 
 // Track activity on the Lightbox screens
@@ -137,6 +137,8 @@ userSockets.on("connection", function(socket) {
 // Track activity of the Lightbox screens controller
 controllerSockets.on("connection", function(socket) {
   sunsConfig.controllerCount +=1;
+
+  socket.emit("start up", sunsConfig);
 
   statsSockets.emit("stats update", sunsConfig);
   controllerSockets.emit("screens up", sunsConfig.screensUp);
