@@ -1,10 +1,33 @@
-<header class="jumbotron">
+<header class="jumbotron grey lighten-4">
 	<h1>Suns Explorer</h1>
 	<p class="lead">A playful visualization of serious data.</p>
+	<hr class="my-4">
+	<p>Suns Explorer is part of a series of projects created by Harvard Art Museums' Department of Digital Infrastructure and Emerging Technology that explores new and unique ways of viewing the museums’ collections.</p>
+	<p>In Suns Explorer, each group of concentric circles represents an artwork. The colors and behavior are set by the data that describe the work. For example, the time it takes each work to move across the screen is based on the total number of times that object’s page has been viewed on the museums’ public website since 2009—the slower the pace, the more popular the artwork. Use the <a href="#" data-toggle="modal" data-target="#controller">controller</a> to play with the suns, or take a moment and enjoy the beauty of data.</p>
+	<p>The data and code for this project (and many others) are open and available to hack, remix, and make your own. Visit <a href="https://hvrd.art/api">hvrd.art/api</a> to learn more.</p>
 </header>
 
-<div class="container">
-	<p>Suns Explorer is part of a series of projects created by Harvard Art Museums' Department of Digital Infrastructure and Emerging Technology that explores new and unique ways of viewing the museums’ collections.</p>
-	<p>In Suns Explorer, each group of concentric circles represents an artwork. The colors and behavior are set by the data that describe the work. For example, the time it takes each work to move across the <a class="btn btn-sm btn-primary" href="/screens">screen</a> is based on the total number of times that object’s page has been viewed on the museums’ public website since 2009—the slower the pace, the more popular the artwork. Use the <a class="btn btn-sm btn-primary" href="/controller">controller interface</a> to play with the suns, or take a moment and enjoy the beauty of data.</p>
-	<p>The data and code for this project (and many others) are open and available to hack, remix, and make your own. Visit <a href="https://hvrd.art/api">hvrd.art/api</a> to learn more.</p>
+<div class="embed-responsive embed-responsive-16by9">
+	<iframe class="embed-responsive-item" src="/screens" allowfullscreen></iframe>
 </div>
+
+<div class="modal fade right" id="controller" tabindex="-1" role="dialog">
+
+	<div class="modal-dialog modal-full-height modal-right" role="document">
+  		<div class="modal-content">
+
+      	<!--Body-->
+      	<div class="modal-body mb-0 p-0">
+
+			<div class="embed-responsive embed-responsive-1by1 z-depth-1-half vh-100">
+				<iframe class="embed-responsive-item" src="/controller" allowfullscreen></iframe>
+			</div>
+		</div>
+
+		</div>
+
+	</div>
+</div>
+
+
+
