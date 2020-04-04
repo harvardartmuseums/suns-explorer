@@ -17,6 +17,7 @@
         width = $(window).width() - margin.right - margin.left,
         height = $(window).height() - margin.top - margin.bottom;
 
+    var origin = {x: 0, y: 0};
     var counter = 0;
     var threshold = 50;
     var isPaused = false;
@@ -31,10 +32,13 @@
     var systemState = 0;
     var atomizerState = 0;
 
-    // Create the SVG container and set the origin.
+    // Create the SVG container and set the origin of the universe.
     var svg = d3.select("#suns").append("svg")
+        .attr("id", "universe")
         .attr("width", width)
         .attr("height", height);
+
+    updateOrigin();
 
     $(window).on('keydown', function (e) {
         switch (e.keyCode) {
@@ -61,6 +65,8 @@
 
         svg.attr("width", width)
             .attr("height", height);
+
+        updateOrigin();
     });
 
     function doWork() {
@@ -72,10 +78,6 @@
 
     function blastColors() {
         busy = true;
-        origin = {
-            x: width/2,
-            y: height/2
-        };
 
         d3.json(query, function(artwork) {
             if (artwork) {
@@ -151,6 +153,13 @@
             }
             busy = false;
         });
+    }
+
+    function updateOrigin() {
+        origin = {
+            x: width/2,
+            y: height/2
+        };    
     }
 
     function calculateRadius(d) {
