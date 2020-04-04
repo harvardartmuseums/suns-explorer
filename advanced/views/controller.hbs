@@ -1,6 +1,5 @@
 <nav class="navbar navbar-dark bg-dark">
 	<h1 class="navbar-brand">Suns Explorer Controller</h1>
-	<h6 class="navbar-text" id="status"></h6>
 </nav>
 <div id="controller" class="container">
 
@@ -69,10 +68,6 @@
     	$("#lights").text(data.lightsOn ? "I Prefer Darkness" : "I Prefer Lightness");
 		$("#systematizer").text(data.systemState === 0 ? "Solar System-atize It" : "Sun-ify It");
 		$("#atomizer").val(data.atomizerState);
-    });
-
-    socket.on("screens up", function(data) {
-    	setScreenStatus(data);
     });
 
     socket.on("tell-me state", function(data) {
@@ -165,8 +160,4 @@
 	$("#atomizer").on("input change", function(e) {
 		socket.emit("atomizer clicked", $(this).val());
 	});
-
-    function setScreenStatus(status) {
-    	$("#status").text(status ? "Screens are on" : "Screen are off");
-    }
 </script>
