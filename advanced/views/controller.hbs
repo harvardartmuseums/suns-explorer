@@ -22,6 +22,16 @@
 
 		<button id="big-bang" class="btn btn-light z-depth-0 btn-outline btn-lg btn-block">Big Bang</button>
 		<button id="end-times" class="btn btn-light z-depth-0 btn-outline btn-lg btn-block">End Times</button>
+
+		
+		<label class="mt-4" for="sizer">Size It</label>
+		<div class="d-flex justify-content-center my-2 mb-4">
+     		<span class="font-weight-bold black-text mr-2"><i class="fas fa-minus" aria-hidden="true"></i></span>
+			<form class="range-field w-100">
+				<input type="range" min="1" max="10" class="border-0 custom-range" id="sizer">
+			</form>
+      		<span class="font-weight-bold black-text ml-2"><i class="fas fa-plus" aria-hidden="true"></i></span>
+		</div>
 	</div>
 <!-- 	<div class="mt-3">
 		<h3>Apply Gravity</h3>
@@ -32,15 +42,7 @@
 			<button id="gravity-3" class="btn btn-light z-depth-0 btn-outline btn-lg w-100">3g</button>
 		</div>
 	</div> -->
-	<div class="mt-3">
-		<h3>Resize Suns</h3>
-		<div class="btn-group btn-block d-flex" role="group">
-			<button id="multiplier-1" class="btn btn-light z-depth-0 btn-outline btn-lg w-100">S</button>
-			<button id="multiplier-2" class="btn btn-light z-depth-0 btn-outline btn-lg w-100">M</button>
-			<button id="multiplier-3" class="btn btn-light z-depth-0 btn-outline btn-lg w-100">L</button>
-			<button id="multiplier-4" class="btn btn-light z-depth-0 btn-outline btn-lg w-100">XL</button>
-		</div>
-	</div>
+
 </div>
 <footer class="footer">
 	<div class="container"></div>
@@ -68,6 +70,7 @@
     	$("#lights").text(data.lightsOn ? "I Prefer Darkness" : "I Prefer Lightness");
 		$("#systematizer").text(data.systemState === 0 ? "Solar System-atize It" : "Sun-ify It");
 		$("#atomizer").val(data.atomizerState);
+		$("#sizer").val(data.scaleMultiplier);
     });
 
     socket.on("tell-me state", function(data) {
@@ -144,20 +147,11 @@
 		socket.emit("end-times clicked")
 	});
 
-	$("#multiplier-1").click(function() {
-		socket.emit("multiplier clicked", 1);
-	});
-	$("#multiplier-2").click(function() {
-		socket.emit("multiplier clicked", 2);
-	});
-	$("#multiplier-3").click(function() {
-		socket.emit("multiplier clicked", 3);
-	});
-	$("#multiplier-4").click(function() {
-		socket.emit("multiplier clicked", 4);
-	});
-
 	$("#atomizer").on("input change", function(e) {
 		socket.emit("atomizer clicked", $(this).val());
+	});
+
+	$("#sizer").on("input change", function(e) {
+		socket.emit("multiplier clicked", $(this).val());
 	});
 </script>
