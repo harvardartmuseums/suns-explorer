@@ -29,6 +29,7 @@
     var lightsOn = true;
     var timer;
     var systemState = 0;
+    var atomizerState = 0;
 
     // Create the SVG container and set the origin.
     var svg = d3.select("#suns").append("svg")
@@ -216,52 +217,67 @@
             .duration(duration);        
     }
 
-    function deconstruct() {
-        d3.selectAll(".orbit")
-            .transition()
-            .attr("cx", function(d) {var offset = getRandomInt(-50, 50); d.xOffset += offset; d3.select(this).attr("d", d); return parseInt(d3.select(this).attr("cx")) + offset})
-            .attr("cy", function(d) {var offset = getRandomInt(-50, 50); d.yOffset += offset; d3.select(this).attr("d", d); return parseInt(d3.select(this).attr("cy")) + offset})
-            .duration(500);
-    }
+    function atomize() {
+        if (atomizerState == 0) {
+            d3.selectAll(".orbit")
+                .transition()
+                .attr("cx", function(d) {var xOffsetOld = d.xOffset; d.xOffset = 0; return 0})
+                .attr("cy", function(d) {var yOffsetOld = d.yOffset; d.yOffset = 0; return 0})
+                .duration(500); 
 
-    function reconstruct() {
-        d3.selectAll(".orbit")
-            .transition()
-            .attr("cx", function(d) {var xOffsetOld = d.xOffset; d.xOffset = 0; return 0})
-            .attr("cy", function(d) {var yOffsetOld = d.yOffset; d.yOffset = 0; return 0})
-            .duration(500);        
+        } else {
+            const range = atomizerState;
+
+            d3.selectAll(".orbit")
+                .transition()
+                .attr("cx", function(d) {var offset = getRandomInt(-range, range); d.xOffset += offset; d3.select(this).attr("d", d); return parseInt(d3.select(this).attr("cx")) + offset})
+                .attr("cy", function(d) {var offset = getRandomInt(-range, range); d.yOffset += offset; d3.select(this).attr("d", d); return parseInt(d3.select(this).attr("cy")) + offset})
+                .duration(500);
+        }
     }
 
     function activateSystems() {
         if (systemState === 1) {
-            d3.selectAll('.planet')
-                .transition()
+            d3.selectAll('g.system').classed('sunned', false);
+
+            const systems = d3.selectAll('g.system:not(.systemed)');
+            
+            systems.selectAll('.planet')
+            .transition()
                     .style('opacity', 1.0)  
                     .duration(870);        
     
-            d3.selectAll('.orbit')
+            systems.selectAll('.orbit')
                 .transition()
                     .style('fill-opacity', 0.0)
                     .duration(870);
             
-            d3.selectAll('.entity')
+            systems.selectAll('.entity')
                 .style('animation-duration', d => `${d.percent * 200}s`)
                 .style('animation-play-state', 'running')
                 .classed('rotate-path', true);
-
-        } else {
-            d3.selectAll('.planet')
-            .transition()
-                .style('opacity', 0.0)  
-                .duration(870);        
-
-            d3.selectAll('.orbit')
-                .transition()
-                    .style('fill-opacity', 1.0)
-                    .duration(870);
+                
+            systems.classed('systemed', true);
             
-            d3.selectAll('.entity')
+        } else {
+            d3.selectAll('g.system').classed('systemed', false);
+            
+            const systems = d3.selectAll('g.system:not(.sunned)');
+            
+            systems.selectAll('.planet')
+            .transition()
+            .style('opacity', 0.0)  
+            .duration(870);        
+            
+            systems.selectAll('.orbit')
+            .transition()
+            .style('fill-opacity', 1.0)
+            .duration(870);
+            
+            systems.selectAll('.entity')
                 .style('animation-play-state', 'paused');
+            
+            systems.classed('sunned', true);
         }
     }
 
@@ -272,6 +288,7 @@
         lightsOn = data.lightsOn;
         isPaused = data.paused;
         systemState = data.systemState;
+        atomizerState = data.atomizerState;
 
         scaleSuns();
         setSpeed();
@@ -303,12 +320,9 @@
             .duration(function(d) {return (100*speed)*d.totalpageviews;});
     });
 
-    socket.on("deconstruct clicked", function() {
-        deconstruct();
-    });
-
-    socket.on("reconstruct clicked", function() {
-        reconstruct();
+    socket.on("atomizer clicked", function(data) {
+        atomizerState = data;
+        atomize();
     });
 
     socket.on("systematizer clicked", function(data) {
