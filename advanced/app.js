@@ -170,6 +170,8 @@ controllerSockets.on("connection", function(socket) {
   
   socket.on("atomizer clicked", function(state) {
     sunsConfig.atomizerState = state;
+    
+    statsSockets.emit("stats update", sunsConfig);
     screensSockets.emit("atomizer clicked", sunsConfig.atomizerState);
   });
   
