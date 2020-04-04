@@ -40,25 +40,6 @@
 
     updateOrigin();
 
-    $(window).on('keydown', function (e) {
-        switch (e.keyCode) {
-            case 37: // left
-                break;
-            case 38: //up
-                break;
-            case 39: // right
-                break;
-            case 40: //down
-                break;
-            case 73: // i
-                break;
-            case 80: // p
-                break;
-            default:
-                //do nothing
-        }
-    });
-
     $(window).on('resize', function() {
         width = $(window).width() - margin.right - margin.left;
         height = $(window).height() - margin.top - margin.bottom;
