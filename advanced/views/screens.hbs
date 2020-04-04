@@ -104,16 +104,20 @@
                     .style('opacity', 0.0)
                     .style('fill', d => d.color);  
 
-                system.append("text")
-                    .style("opacity", isLabelsOn ? 1 : 0)
-                    .text(d => d.title);  
+                var text = system.append("a")
+                                .attr("xlink:href", d => d.url)
+                                .attr("target", "_blank");
+
+                text.append("text")
+                        .style("opacity", isLabelsOn ? 1 : 0)
+                        .text(d => d.title);  
 
                 if (artwork.records[0].gallery) {
-                    system.append("text")
+                    text.append("text")
                         .attr("dx", 0)
                         .attr("dy", 20)
                         .style("opacity", isLabelsOn ? 1 : 0)
-                        .text(function(d) {return "Visit me in gallery " + d.gallery.gallerynumber + " on floor " + d.gallery.floor; });  
+                        .text(function(d) {return `Visit me in gallery ${d.gallery.gallerynumber} on floor ${d.gallery.floor}`});  
                 }
 
                 activateSystems();
