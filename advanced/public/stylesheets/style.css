@@ -1,19 +1,14 @@
-html, body {margin: 0px;padding: 0px;font-family: verdana;height: 100%;}
+html, body {margin: 0px;padding: 0px;height: 100%;}
 svg {border: 0px solid;}
-
-.lights-on {background: #ffffff;}
-.lights-off {background: #000000;}            
 
 a {color:#000000;text-decoration: underline;}
 a:hover {color:#ffffff;background: #000000;}
 
 #suns {overflow: hidden;position: fixed;background: #ffffff;}
-#info {position: fixed;padding:10px;}
-#info #title {top: 10px;left:25px;}
 
+/* List View */
 #list .item {padding: 10px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 #list .item:hover {background-color: #c8c8c8; cursor: pointer;}
-
 
 /* Controller */
 .btn {white-space: normal;}
