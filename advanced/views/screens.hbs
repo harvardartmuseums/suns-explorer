@@ -1,4 +1,4 @@
-<div id="suns"></div>
+<div id="spacetime"></div>
 <script src="javascripts/d3/d3.v3.min.js"></script>
 <script type="text/javascript">
     var socket = io('/screens-namespace');
@@ -33,7 +33,7 @@
     var atomizerState = 0;
 
     // Create the SVG container and set the origin of the universe.
-    var svg = d3.select("#suns").append("svg")
+    var svg = d3.select("#spacetime").append("svg")
         .attr("id", "universe")
         .attr("width", width)
         .attr("height", height);
@@ -197,7 +197,7 @@
             color = "#000000";
         }
 
-        d3.select("#suns")  
+        d3.select("#spacetime")  
             .transition()
             .ease("exp-in")
             .style("background", color)

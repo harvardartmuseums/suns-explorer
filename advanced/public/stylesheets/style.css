@@ -4,7 +4,7 @@ svg {border: 0px solid;}
 a {color:#000000;text-decoration: underline;}
 a:hover {color:#ffffff;background: #000000;}
 
-#suns {overflow: hidden;position: fixed;background: #ffffff;}
+#spacetime {overflow: hidden;position: fixed;background: #ffffff;}
 
 /* List View */
 #list .item {padding: 10px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
