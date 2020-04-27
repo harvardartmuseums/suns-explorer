@@ -17,3 +17,18 @@
 3. Run `npm start`
 
 4. View http://localhost:3000 in your browser  
+
+
+## Composition of the Universe
+
+Each universe if situated in a spacetime continuum. The elements in a given universe are ordered hierarchically.
+
+* Spacetime  
+    * Universe  
+        * System
+            * Entity
+                * Orbit
+                * Planet
+            * Text
+
+A system represents an object. An entity represents a color. An entity is composed of an orbit and a planet. The planet follows the orbit. 
