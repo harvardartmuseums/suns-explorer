@@ -73,9 +73,9 @@ var sunsConfig = {
   screensUp: false,
   labelsOn: false,
   lightsOn: true,
-  paused: false,
+  paused: true,
   scaleMultiplier: 1,
-  speedMultiplier: 1,
+  speedMultiplier: 0,
   systemState: 0,  // Systems on (1) or off (0)
   atomizerState: 0
 };
@@ -144,14 +144,6 @@ controllerSockets.on("connection", function(socket) {
   statsSockets.emit("stats update", sunsConfig);
   controllerSockets.emit("screens up", sunsConfig.screensUp);
 
-  socket.on("pause clicked", function() {
-    sunsConfig.paused = !sunsConfig.paused;
-    
-    statsSockets.emit("stats update", sunsConfig);
-    screensSockets.emit("pause clicked", sunsConfig.paused);
-    controllerSockets.emit("pause state", sunsConfig.paused);
-  });
-
   socket.on("tell-me clicked", function() {
     sunsConfig.labelsOn = !sunsConfig.labelsOn;
 
@@ -175,22 +167,12 @@ controllerSockets.on("connection", function(socket) {
     screensSockets.emit("atomizer clicked", sunsConfig.atomizerState);
   });
   
-  socket.on("slower clicked", function() {
-    if (sunsConfig.speedMultiplier < 10) {
-      sunsConfig.speedMultiplier +=1      
+  socket.on("time standard clicked", function(speed) {
+    sunsConfig.speedMultiplier = speed; 
+    sunsConfig.paused = (speed == 0);
       
-      statsSockets.emit("stats update", sunsConfig);
-      screensSockets.emit("set speed multiplier", sunsConfig.speedMultiplier);
-    }
-  });
-
-  socket.on("faster clicked", function() {
-    if (sunsConfig.speedMultiplier > 1) {
-      sunsConfig.speedMultiplier -=1      
-      
-      statsSockets.emit("stats update", sunsConfig);
-      screensSockets.emit("set speed multiplier", sunsConfig.speedMultiplier);
-    }
+    statsSockets.emit("stats update", sunsConfig);
+    screensSockets.emit("set speed multiplier", sunsConfig.speedMultiplier);
   });
 
   socket.on("scatter clicked", function() {

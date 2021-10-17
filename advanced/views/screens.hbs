@@ -117,7 +117,7 @@
 
                 system.transition()
                     .attr("transform", generateRandomTranslation)
-                    .duration(function(d) {return (100*speed)*d.totalpageviews;})
+                    .duration(function(d) {return (100/speed)*d.totalpageviews;})
                     .delay(400);
 
                 socket.emit("new sun", {
@@ -176,7 +176,7 @@
 
     function setSpeed() {
         window.clearInterval(timer);
-        timer = window.setInterval(doWork, 1000*speed);
+        timer = window.setInterval(doWork, 10000/speed);
     }
 
     function eraseColors() {
@@ -286,10 +286,6 @@
         // do something awesome and spacey
     });
 
-    socket.on("pause clicked", function() {
-        isPaused = !isPaused;
-    });
-
     socket.on("tell-me clicked", function() {
         isLabelsOn = !isLabelsOn;
         d3.selectAll("text").style("opacity", isLabelsOn ? 1 : 0);
@@ -304,7 +300,7 @@
         d3.selectAll(".system")  
             .transition()
             .attr("transform", generateRandomTranslation)
-            .duration(function(d) {return (100*speed)*d.totalpageviews;});
+            .duration(function(d) {return (100/speed)*d.totalpageviews;});
     });
 
     socket.on("atomizer clicked", function(data) {
@@ -398,6 +394,7 @@
 
     socket.on("set speed multiplier", function(value) {
         speed = value;
-        setSpeed();
+        isPaused = (speed == 0);
+        if (!isPaused) setSpeed();
     })
 </script>
