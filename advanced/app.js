@@ -73,9 +73,9 @@ var sunsConfig = {
   screensUp: false,
   labelsOn: false,
   lightsOn: true,
-  paused: true,
+  paused: false,
   scaleMultiplier: 1,
-  speedMultiplier: 0,
+  speedMultiplier: 5,  // 0 (statis) - 10 (rapid creation)
   systemState: 0,  // Systems on (1) or off (0)
   atomizerState: 0
 };
