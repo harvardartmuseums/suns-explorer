@@ -81,16 +81,20 @@
 		"rapid fusion and expansion"
 	];
 
-    var socket = io('/controller-namespace');
-
-    socket.on("start up", function(data) {
-    	$("#tell-me").text(data.labelsOn ? "Tell Me Not" : "Tell Me");
+	function startUp(data) {
+		$("#tell-me").text(data.labelsOn ? "Tell Me Not" : "Tell Me");
     	$("#lights").text(data.lightsOn ? "Let There Be Darkness" : "Let There Be Lightness");
 		$("#systematizer").text(data.systemState === 0 ? "Solar System-atize It" : "Sun-ify It");
 		$("#atomizer").val(data.atomizerState);
 		$("#sizer").val(data.scaleMultiplier);
 		$("#state").text(speedMessages[data.speedMultiplier]);
 		$("#time-standard").val(data.speedMultiplier);
+	}
+
+    var socket = io('/controller-namespace');
+
+    socket.on("start up", function(data) {
+    	startUp(data);
     });
 
     socket.on("tell-me state", function(data) {
@@ -114,8 +118,11 @@
     });
 
     socket.on("end-times ended", function(data) {
+		startUp(data);
     	$("#end-times-message")
-			.fadeTo(750, 0.0, function() {$(this).hide()})
+			.fadeTo(750, 0.0, function() {
+				$(this).hide(); 
+			});
     });
 
     socket.on("big-bang started", function(data) {

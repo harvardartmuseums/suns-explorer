@@ -67,7 +67,7 @@ var controllerSockets = io.of("/controller-namespace");
 var userSockets = io.of("/user-namespace");
 var statsSockets = io.of("/stats-namespace");
 
-var sunsConfig = {
+var sunsDefaults = {
   controllerCount: 0,
   screenCount: 0,
   screensUp: false,
@@ -79,6 +79,8 @@ var sunsConfig = {
   systemState: 0,  // Systems on (1) or off (0)
   atomizerState: 0
 };
+
+var sunsConfig = Object.assign({}, sunsDefaults);
 
 // Track activity on the Lightbox screens
 screensSockets.on('connection', function(socket) {
@@ -101,8 +103,9 @@ screensSockets.on('connection', function(socket) {
   });
   
   socket.on("end-times ended", function(data) {
-    controllerSockets.emit("end-times ended", data);
-    
+    sunsConfig = Object.assign({}, sunsDefaults);
+
+    controllerSockets.emit("end-times ended", sunsConfig);    
     screensSockets.emit("start up", sunsConfig);
   });
 
@@ -111,8 +114,7 @@ screensSockets.on('connection', function(socket) {
   });
   
   socket.on("big-bang ended", function(data) {
-    controllerSockets.emit("big-bang ended", data);
-    
+    controllerSockets.emit("big-bang ended", data);    
     screensSockets.emit("start up", sunsConfig);
   });
 
