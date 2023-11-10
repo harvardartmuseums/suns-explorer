@@ -144,7 +144,7 @@ controllerSockets.on("connection", function(socket) {
   socket.emit("start up", sunsConfig);
 
   statsSockets.emit("stats update", sunsConfig);
-  controllerSockets.emit("screens up", sunsConfig.screensUp);
+  controllerSockets.emit("update", sunsConfig);
 
   socket.on("tell-me clicked", function() {
     sunsConfig.labelsOn = !sunsConfig.labelsOn;
@@ -167,6 +167,7 @@ controllerSockets.on("connection", function(socket) {
     
     statsSockets.emit("stats update", sunsConfig);
     screensSockets.emit("atomizer clicked", sunsConfig.atomizerState);
+    controllerSockets.emit("update", sunsConfig);
   });
   
   socket.on("time standard clicked", function(speed) {
@@ -175,6 +176,7 @@ controllerSockets.on("connection", function(socket) {
       
     statsSockets.emit("stats update", sunsConfig);
     screensSockets.emit("set speed multiplier", sunsConfig.speedMultiplier);
+    controllerSockets.emit("update", sunsConfig);
   });
 
   socket.on("scatter clicked", function() {
@@ -202,12 +204,14 @@ controllerSockets.on("connection", function(socket) {
 
     statsSockets.emit("stats update", sunsConfig);
     screensSockets.emit("set multiplier", sunsConfig.scaleMultiplier);
+    controllerSockets.emit("update", sunsConfig);
   });
 
   socket.on("disconnect", function() {
     sunsConfig.controllerCount -=1;
 
     statsSockets.emit("stats update", sunsConfig);
+    controllerSockets.emit("update", sunsConfig);
   });
 });
 
